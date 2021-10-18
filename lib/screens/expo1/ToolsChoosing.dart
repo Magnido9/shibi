@@ -1,5 +1,6 @@
 library expo;
 import 'package:application/screens/expo1/body_tools.dart';
+import 'package:application/screens/expo1/thougths_challenge.dart';
 import 'package:tuple/tuple.dart';
 
 import 'package:application/screens/Avatar/avatar.dart';
@@ -310,7 +311,8 @@ class _tools_state extends State<tools> {
           ),
           onPressed: () async {
             if (choose == 2) {
-              await Navigator.pushNamed(context, '/thoughts/1');
+              await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) =>ThoughtsChallenge(adata:adata ,theCase: theCase)));
             } else if (choose == 0) {
               await Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (BuildContext context) =>BodyTools(adata:adata ,theCase: theCase)));
