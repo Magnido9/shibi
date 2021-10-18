@@ -281,10 +281,28 @@ class _Page1State extends State<_Page1> {
                   chosen=snapshot.data['chosen'];
                   thoughts=snapshot.data['thoughts'];
                   replies=snapshot.data['replies'];
-                  return Stack(children:[Positioned(
-                    child: Baloon(color:chosen[0], diameter: width*0.316, angle: -0.3, text: thoughts[chosen[0]],secondery:replies[chosen[0]],),
-                    top: height*0.53,
-                    left: width*0.11,),
+                  return Stack(children:[
+
+                    Positioned(  top: height*0.53,
+                    left: width*0.11,
+                    child:GestureDetector(child: Baloon(color:chosen[0], diameter: width*0.316, angle: -0.3, text: thoughts[chosen[0]],secondery:replies[chosen[0]],),
+
+                        onTap: () async {
+                            var x = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => _BallonPage(
+                                    color: 0,
+                                    text: thoughts[0],
+                                    secondery: replies[0],
+                                  )),
+                            );
+                            print(chosen);
+
+                        }
+
+
+                    )),
                 Positioned(
                 child: Baloon(color:chosen[1], diameter: width*0.316, angle: 0.3, text: thoughts[chosen[1]],secondery: replies[chosen[1]],),
                 top: height*0.47,
@@ -1059,12 +1077,12 @@ class ExpoData {
   List<bool> done = [false, false, false];
   int stress = 50;
   List<String> thoughts = [
-    'אני תמיד אגיד או אעשה משהו...',
-    'הכי נורא שיכול לקרות זה...',
-    'תמיד כשאני עושה דברים כאלו...',
-    'אף אחד אף פעם לא אוהב ש...',
-    'אני מרגישה לא בנוח ולכן...',
-    'אני לא אדע איך...'
+    'אני תמיד אגיד או אעשה משהו',
+    'הכי נורא שיכול לקרות זה',
+    'תמיד כשאני עושה דברים כאלו',
+    'אף אחד אף פעם לא אוהב ש',
+    'אני מרגישה לא בנוח ולכן',
+    'אני לא אדע איך'
   ];
   List<String> replies = ['', '', '', '', '', ''];
   List<String> feelings = [
@@ -1243,5 +1261,212 @@ class _PaintTask extends CustomPainter {
   @override
   bool shouldRepaint(_PaintTask oldDelegate) {
     return (slices != oldDelegate.slices) || (complete != oldDelegate.complete);
+  }
+}
+class _BallonPage extends StatefulWidget {
+  _BallonPage(
+      {required this.text, required this.color, required this.secondery});
+  final int color;
+  final String text;
+  final String secondery;
+  @override
+  _ballonState createState() => _ballonState();
+}
+
+class _ballonState extends State<_BallonPage> {
+  TextEditingController? _controller;
+  double height = 0, width = 0;
+
+  @override
+  void initState() {
+    _controller = TextEditingController(text: widget.secondery);
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (width == 0) width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+        floatingActionButton: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(width: 20),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Color(0xff35258a),
+                shape: CircleBorder(),
+              ),
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context, _controller?.text.trim());
+              },
+            )
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            width: width,
+            height: height,
+            child: Stack(
+              children: [
+                Positioned(
+                    bottom: height * 0.8,
+                    right: width * 0.8,
+                    child: Baloon(
+                      id: 1,
+                      angle: 0,
+                      diameter: width * 0.5,
+                      color: 1,
+                      text: '',
+                    )),
+                Positioned(
+                    bottom: height * 0.8,
+                    left: width * 0.7,
+                    child: Baloon(
+                      id: 1,
+                      angle: 0.1,
+                      diameter: width * 0.6,
+                      color: 3,
+                      text: '',
+                    )),
+                Positioned(
+                    top: height * 0.6,
+                    left: width * 0.7,
+                    child: Baloon(
+                      id: 1,
+                      angle: 0,
+                      diameter: width * 0.8,
+                      color: 2,
+                      text: '',
+                    )),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                      padding: EdgeInsets.only(top: height * 0.1),
+                      child: Baloon(
+                        id: 1,
+                        angle: 0,
+                        diameter: width * 0.95,
+                        color: widget.color,
+                        text: '',
+                      )),
+                ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    margin: EdgeInsets.only(top: height * 0.2),
+                    width: width * 0.7,
+                    height: width * 0.7,
+                    child: Column(children: [
+                      Text(
+                        widget.text + widget.secondery,
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.right,
+                        style: GoogleFonts.assistant(
+                          color: Color(0xff35258a),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    Container(height:20),
+                    Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                child: Container(
+                                  child: Center(
+                                    child: Text(
+                                      '?',
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                  ),
+                                  width: 26,
+                                  height: 26,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle, //3
+                                    color: Color(0xffc4c4c4),
+                                  ),
+                                ),
+                                onTap: () => showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => BackdropFilter(
+                                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                    child: AlertDialog(
+                                      backgroundColor: Color(0xffECECEC),
+                                      content: RichText(
+                                        textDirection: TextDirection.rtl,
+                                        text: TextSpan(
+                                          style: GoogleFonts.assistant(
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                          ),
+                                          children: <TextSpan>[
+                                            //
+                                            TextSpan(text: 'עוד לא הוכנס מלל.\n'),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                                          child: const Text(
+                                            'x',
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(width: 80),
+                              Container(
+                                margin: EdgeInsets.only(right: 0, left: 0, bottom: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "נסו למצוא את האפור",
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.right,
+                                      style: GoogleFonts.assistant(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(width: 20),
+                            ],
+                          ),
+
+                      TextField(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: "Assistant",
+                          fontWeight: FontWeight.w300,
+                        ),
+                        textDirection: TextDirection.rtl,
+                        controller: _controller,
+                        maxLines: 4,
+                      )
+                    ]),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
