@@ -329,6 +329,7 @@ class _thought1_state extends State<thought1_1> {
                                             // Provider.of<ExpoData>(context,
                                             //         listen: false)
                                             //     .replies = replies;
+                                            _save(data);
                                             Navigator.pushNamed(
                                                 context, '/thoughts/2',
                                                 arguments: chosen);
@@ -353,6 +354,12 @@ class _thought1_state extends State<thought1_1> {
         ],
       ),
     );
+  }
+  void _save(data) async {
+    String? pid = AuthRepository.instance().user?.uid;
+    await FirebaseFirestore.instance.collection("balloons").doc(pid).set({
+      'chosen': chosen,'replies':data.replies,'thoughts':data.thoughts
+    });
   }
 }
 

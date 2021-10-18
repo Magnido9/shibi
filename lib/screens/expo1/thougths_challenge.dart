@@ -71,11 +71,32 @@ class _Page1 extends StatefulWidget {
 
 class _Page1State extends State<_Page1> {
   double feeling = 0;
+  var chosen = [];
+  var replies;
+  var thoughts;
+  var _data;
 
+  static  load() async {
+    print("aa");
+    String? pid = AuthRepository.instance().user?.uid;
+    var v =
+    (await FirebaseFirestore.instance.collection("balloons").doc(pid).get());
+    print(v['chosen']);
+
+    return v;
+  }
+  @override
+  void initState() {
+    super.initState();
+    _data = load();
+  }
   @override
   Widget build(BuildContext context) {
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    print(width);
     return Scaffold(
       body:  Container(
         decoration: BoxDecoration(
@@ -101,6 +122,7 @@ class _Page1State extends State<_Page1> {
 
         Positioned(right:0,top:300,child:Image.asset("images/cloud1.png")),
         Positioned(left:0,top:400,child:Image.asset("images/cloud2.png")),
+
         Align(
           alignment: Alignment.topRight,
           child: Container(
@@ -133,7 +155,7 @@ class _Page1State extends State<_Page1> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "           הרפיית מחשבות",
+                  "     הרפיית מחשבות",
                   //textAlign: TextAlign.center,
                   style: GoogleFonts.assistant(
                     color: Colors.black,
@@ -248,6 +270,64 @@ class _Page1State extends State<_Page1> {
                 Container(width: 20),
               ],
             )),
+
+
+
+          FutureBuilder(
+              future: _data,
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+
+                if (snapshot.hasData) {
+                  chosen=snapshot.data['chosen'];
+                  thoughts=snapshot.data['thoughts'];
+                  replies=snapshot.data['replies'];
+                  return Stack(children:[Positioned(
+                    child: Baloon(color:chosen[0], diameter: width*0.316, angle: -0.3, text: thoughts[chosen[0]],secondery:replies[chosen[0]],),
+                    top: height*0.53,
+                    left: width*0.11,),
+                Positioned(
+                child: Baloon(color:chosen[1], diameter: width*0.316, angle: 0.3, text: thoughts[chosen[1]],secondery: replies[chosen[1]],),
+                top: height*0.47,
+                right: width*0.19,
+                ),
+                Positioned(
+                child: Baloon(color:chosen[2], diameter: width*0.34, angle: 0, text: thoughts[chosen[2]],secondery: replies[chosen[2]],),
+                top: height*0.3,
+                left: width*0.3,)]);
+                } else
+                  return CircularProgressIndicator(
+                    color: Colors.green,
+                  );
+              }),
+             Positioned( child:Stack(
+                            children: [
+                              Positioned(
+                                  top: height*0.46,
+                                  left: width*0.22,
+                                  child: Container(
+                                    width: width*0.5,
+                                    height: height*0.5,
+                                    child: FittedBox(
+                                      fit: BoxFit.fitHeight,
+                                      child: Image.asset('images/strings.png'),
+                                    ),
+                                  )
+                              ),
+                              Positioned(
+    top: height*0.92,
+    left: width*0.15,child:Image.asset('images/handsbaloon.png')),
+
+               /*
+
+                              */
+
+
+                            ],)
+
+
+                      )
+
+
       ]),
     ));
   }
@@ -534,6 +614,7 @@ class _Page2State extends State<_Page2> {
 
     ]));
   }
+
 }
 
 class _Main extends StatefulWidget {
