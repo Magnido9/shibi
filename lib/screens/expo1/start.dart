@@ -42,7 +42,7 @@ class Expo1 extends StatelessWidget {
           '/thoughts/2': (context) => thought2_1(),
           '/feelings/1': (context) => feeling1_1(),
           '/body/1' : (context) => body1_1() ,
-          '/tools' : (context) => tools() ,
+          '/tools' : (context) => tools(adata: adata,theCase: this.theCase,) ,
         },
       ),
     );

@@ -1,4 +1,5 @@
 library expo;
+import 'package:application/screens/expo1/body_tools.dart';
 import 'package:tuple/tuple.dart';
 
 import 'package:application/screens/Avatar/avatar.dart';
@@ -7,15 +8,23 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dart:math';
+
+import 'feelings_tools.dart';
 class tools extends StatefulWidget {
-  tools();
+  tools({required this.adata, required this.theCase});
+  final AvatarData adata;
+  final String theCase;
 
   @override
-  _tools_state createState() => _tools_state();
+  _tools_state createState() => _tools_state(adata: adata,theCase:theCase);
 }
 
 class _tools_state extends State<tools> {
+  _tools_state({required this.adata, required this.theCase});
+  final AvatarData adata;
+  final String theCase;
   int choose = -1;
+  List<bool> done=[false,false,false];
   @override
   Widget build(BuildContext context) {
     print('ToolsPage');
@@ -71,7 +80,7 @@ class _tools_state extends State<tools> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "                  בחירת כלי",
+                  "           בחירת כלי",
                   //textAlign: TextAlign.center,
                   style: GoogleFonts.assistant(
                     color: Colors.black,
@@ -141,10 +150,10 @@ class _tools_state extends State<tools> {
                 ),
               ),
               Container(
-                width:80
+                width:60
               ),
               Container(
-                margin: EdgeInsets.only(right: 20, left: 20, bottom: 10),
+                margin: EdgeInsets.only(right: 0, left: 0, bottom: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -163,6 +172,7 @@ class _tools_state extends State<tools> {
                     ),
                     Text(
                       "בחרי בכלי שיסייע להקל על החרדה שלך.",
+                      textDirection: TextDirection.rtl,
                       textAlign: TextAlign.right,
                       style: GoogleFonts.assistant(
                         color: Colors.black,
@@ -188,14 +198,11 @@ class _tools_state extends State<tools> {
               builder: (BuildContext context, double percent, Widget? child) {
                 return Container(
                   width: (choose == -1) ? width : width * percent,
-                  child: Consumer<ExpoData>(
-                    builder: (context, data, w) {
-                      print(data.done);
-                      return Row(
+                  child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _MyButton(
-                              isDone: data.done[0],
+                              isDone: done[0],
                               isSelected: (choose == 0),
                               name: 'גוף',
                               func: () {
@@ -205,7 +212,7 @@ class _tools_state extends State<tools> {
                               },
                               image: 'images/expo/meditate.png'),
                           _MyButton(
-                              isDone: data.done[1],
+                              isDone: done[1],
                               isSelected: (choose == 1),
                               name: 'רגשות',
                               func: () {
@@ -215,7 +222,7 @@ class _tools_state extends State<tools> {
                               },
                               image: 'images/expo/smile.png'),
                           _MyButton(
-                              isDone: data.done[2],
+                              isDone: done[2],
                               isSelected: (choose == 2),
                               name: 'מחשבות',
                               func: () {
@@ -225,8 +232,6 @@ class _tools_state extends State<tools> {
                               },
                               image: 'images/expo/brain.png'),
                         ],
-                      );
-                    },
                   ),
                 );
               }),
@@ -254,10 +259,9 @@ class _tools_state extends State<tools> {
                         child: Text(
                           _title(),
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: GoogleFonts.assistant(
                             color: Colors.black,
                             fontSize: 20,
-                            fontFamily: "Assistant",
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -268,7 +272,7 @@ class _tools_state extends State<tools> {
                           _text(),
                           textAlign: TextAlign.right,
                           textDirection: TextDirection.rtl,
-                          style: TextStyle(
+                          style: GoogleFonts.assistant(
                             color: Colors.black,
                             fontSize: 18,
                           ),
@@ -308,9 +312,11 @@ class _tools_state extends State<tools> {
             if (choose == 2) {
               await Navigator.pushNamed(context, '/thoughts/1');
             } else if (choose == 0) {
-              await Navigator.pushNamed(context, '/body/1');
+              await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) =>BodyTools(adata:adata ,theCase: theCase)));
             } else if (choose == 1) {
-              await Navigator.pushNamed(context, '/feelings/1');
+              await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) =>FeelingsTools(adata:adata ,theCase: theCase)));
             }
             setState(() {
               choose = -1;
@@ -326,27 +332,32 @@ class _tools_state extends State<tools> {
   }
 
   String _title() {
-    var x = Provider.of<ExpoData>(context, listen: false).introductions;
-    if (choose == 0) return x[0].item1;
-    if (choose == 1) return x[1].item1;
-    if (choose == 2) return x[2].item1;
+    var x =['הרפיית גוף'  ,
+      'הרפיית רגש',
+      'אתגור מחשבה'];
+
+    if (choose == 0) return x[0];
+    if (choose == 1) return x[1];
+    if (choose == 2) return x[2];
     return '';
   }
 
   String _text() {
-    var x = Provider.of<ExpoData>(context, listen: false).introductions;
-    if (choose == 0) return  x[0].item2;
-    if (choose == 1) return x[1].item2;
-    if (choose == 2) return  x[2].item2;
+    var x =['כלי זה עוזר ומאפשר להרגיע את הגוף על ידי כיווץ, הרפיה ונשימות שיקלו על החרדה שלך.'  ,
+    'כלי זה עוזר להסיח את הדעת מן המחשבות הללו, על ידי מיקוד בדבר אחד המעורר אצלך רגשות חיוביים',
+    'כלי זה מאפשר לך לזהות את המחשבות שבחרת ולנטרל אותן'];
+    if (choose == 0) return  x[0];
+    if (choose == 1) return x[1];
+    if (choose == 2) return  x[2];
     return '';
   }
 
   Color _color() {
-    var x = Provider.of<ExpoData>(context, listen: false).colors;
-    if (choose == 0) return  x[1];
-    if (choose == 1) return x[2];
-    if (choose == 2) return  x[0];
-    return Color(0xffefd6ee);
+
+    if (choose == 0) return  Color(0xfff0edf7);
+    if (choose == 1) return Color(0xfff0edf7);
+    if (choose == 2) return  Color(0xfff0edf7);
+    return Color(0xfff0edf7);
   }
 }
 
@@ -379,8 +390,8 @@ class _MyButton extends StatelessWidget {
                         color: (isDone)
                             ? Color(0xffEDEBEB)
                             : (isSelected)
-                                ? Color(0xffB3E8EF)
-                                : Color(0xff35258A),
+                                ? Color(0xffe5def3)
+                                : Color(0xff35258a),
                       )),
                   margin: EdgeInsets.all(constraints.maxWidth * 0.08),
                   width: constraints.maxWidth,
@@ -391,7 +402,7 @@ class _MyButton extends StatelessWidget {
                         ? Color(0xffABAAAA)
                         : (isSelected)
                             ? Color(0xff35258A)
-                            : Color(0xffdee8f3),
+                : Color(0xffe5def3),
                   ),
                 ),
                 if (isDone)
@@ -433,88 +444,7 @@ class _MyButton extends StatelessWidget {
   }
 }
 
-class ExpoData {
-  ExpoData({required this.adata, required this.theCase,required this.body_task,required this.feelings_task,required this.thoughts_task}) {
 
-    while (feelings.length % 8 != 0) {
-      feelings.add('');
-    }
-
-    introductions=[all_introductions[0][body_task],all_introductions[1][feelings_task], all_introductions[2][thoughts_task]];
-  }
-  int body_task, feelings_task, thoughts_task;
-  String theCase;
-  List<Color> colors=[
-    Color(0xfff3f1de),
-    Color(0xffdef3df),
-    Color(0xffefd6ee)
-  ];
-  List<List<Tuple2<String,String>>> all_introductions=[
-    [Tuple2('זיהוי גוף','חשוב שנלמד לזהות כיצד הגוף משפיע על החרדה שלנו.'  )],
-    [Tuple2('זיהוי רגשות',  'הרגש הוא חלק מהותי מן החרדה שלנו......')],
-    [Tuple2( 'זיהוי מחשבות',  'המחשבות הם מחל מהמחשבה, וחשוב שנאתרן...')]];
-  List<Tuple2<String,String>> introductions=[];
-
-  List<bool> done = [false, false, false];
-  int stress = 50;
-  List<String> thoughts = [
-    'אני תמיד אגיד או אעשה משהו...',
-    'הכי נורא שיכול לקרות זה...',
-    'תמיד כשאני עושה דברים כאלו...',
-    'אף אחד אף פעם לא אוהב ש...',
-    'אני מרגישה לא בנוח ולכן...',
-    'אני לא אדע איך...'
-  ];
-  List<String> replies = ['', '', '', '', '', ''];
-  List<String> feelings = [
-    'סיבוך',
-    'פגיעות',
-    'עצב',
-    'בדידות',
-    'ריקנות',
-    'אבודה',
-    'נידוי',
-    'אכזבה',
-    'בחילה',
-    'תיעוב',
-    'גועל',
-    'חוסר נוחות',
-    'היסוס',
-    'אדישות',
-    'חרטה',
-    'מוצף',
-    'מפוחד',
-    'מופתע',
-    'נואשות',
-    '',
-    'לחץ',
-    'מבועט',
-    'ספקנות',
-    'פאניקה',
-    'ביטחון עצמי',
-    'השראה',
-    'ריגוש',
-    'תקווה',
-    '',
-    'גאווה',
-    'שמחה',
-    'הקלה',
-    'מרמור',
-    'השפלה',
-    '',
-    'מופתע',
-    'נואשות',
-    'כעס',
-    'עצבנות',
-    'תסכול',
-    'רוגז',
-    'קימום'
-  ];
-  List<int> felt = [];
-
-  List<String> painSpots=[];
-  AvatarData adata;
-}
 
 class _LoadBar extends CustomPainter {
   final double percent;
@@ -531,7 +461,7 @@ class _LoadBar extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 8;
     Offset center = Offset(size.width / 2, -size.width * 0.3);
-    canvas.drawCircle(center, size.width*1.05,painter..color = Color(0xffdee8f3)
+    canvas.drawCircle(center, size.width*1.05,painter..color = Color(0xffe5def3)
       ..style = PaintingStyle.fill );
     canvas.drawArc(Rect.fromCircle(center: center, radius: size.width*1.05), 0, pi,
         false, painter..color = Color(0xffc4c4c4)..style = PaintingStyle.stroke);

@@ -1,6 +1,7 @@
 import 'package:application/screens/caretaker/home.dart';
 import 'package:application/screens/checkin/checkin.dart';
 import 'package:application/screens/expo1/body_tools.dart';
+import 'package:application/screens/expo1/feelings_tools.dart';
 import 'package:application/screens/login/homescreen.dart';
 import 'package:application/screens/login/password.dart';
 import 'package:application/screens/login/privacy.dart';
@@ -21,7 +22,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   // AuthRepository.instance().signOut();
-  runApp(BodyTools(adata: AvatarData(), theCase: '\"להכנס לחנות בגדים ולבקש למדוד פריט מסוים. לבקש עוד פריט, לצאת ולומר תודה רבה מבלי לקנות דבר\"'));
+  runApp(Expo1(adata: AvatarData(), theCase: '\"להכנס לחנות בגדים ולבקש למדוד פריט מסוים. לבקש עוד פריט, לצאת ולומר תודה רבה מבלי לקנות דבר\"'));
   // runApp(Wrapper());
 }
 

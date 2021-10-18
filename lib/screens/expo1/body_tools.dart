@@ -13,6 +13,7 @@ import '../../services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
+import 'ToolsChoosing.dart';
 import 'body.dart';
 import 'feelings.dart';
 import 'thoughts.dart';
@@ -43,6 +44,7 @@ class BodyTools extends StatelessWidget {
           '/thoughts/2': (context) => thought2_1(),
           '/feelings/1': (context) => feeling1_1(),
           '/body/1' : (context) => body1_1() ,
+          '/tools': (context) => tools(theCase: theCase,adata: adata),
         },
       ),
     );
@@ -85,7 +87,7 @@ class _Page1State extends State<_Page1> {
             disabledElevation: 0,
             backgroundColor: Colors.grey.shade400,
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushNamed(context,'/tools');
             },
             child: Icon(Icons.arrow_forward),
           ),
