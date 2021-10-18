@@ -1309,7 +1309,12 @@ class _ballonState extends State<_BallonPage> {
             )
           ],
         ),
-        body: SingleChildScrollView(
+        body:  Container(
+    decoration: BoxDecoration(
+    gradient: LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Colors.lightBlueAccent, Colors.white])),child:SingleChildScrollView(
           child: Container(
             width: width,
             height: height,
@@ -1318,32 +1323,37 @@ class _ballonState extends State<_BallonPage> {
                 Positioned(
                     bottom: height * 0.8,
                     right: width * 0.8,
-                    child: Baloon(
-                      id: 1,
-                      angle: 0,
-                      diameter: width * 0.5,
-                      color: 1,
-                      text: '',
-                    )),
+                    child: Container(
+                      width: 252,
+                      height: 252,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0x4280cf8d),
+                      ),
+                    )
+                ),
                 Positioned(
-                    bottom: height * 0.8,
-                    left: width * 0.7,
-                    child: Baloon(
-                      id: 1,
-                      angle: 0.1,
-                      diameter: width * 0.6,
-                      color: 3,
-                      text: '',
-                    )),
+                    bottom: height * 0.95,
+                    left: width * 0.5,
+                    child: Container(
+                      width: 365,
+                      height: 365,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xffe0cbdc),
+                      ),
+                    )
+                ),
                 Positioned(
                     top: height * 0.6,
                     left: width * 0.7,
-                    child: Baloon(
-                      id: 1,
-                      angle: 0,
-                      diameter: width * 0.8,
-                      color: 2,
-                      text: '',
+                    child: Container(
+                      width: 451,
+                      height: 447,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xfff3f1de),
+                      ),
                     )),
                 Align(
                   alignment: Alignment.topCenter,
@@ -1352,7 +1362,7 @@ class _ballonState extends State<_BallonPage> {
                       child: Baloon(
                         id: 1,
                         angle: 0,
-                        diameter: width * 0.95,
+                        diameter: width *1.2,
                         color: widget.color,
                         text: '',
                       )),
@@ -1362,7 +1372,7 @@ class _ballonState extends State<_BallonPage> {
                   child: Container(
                     margin: EdgeInsets.only(top: height * 0.2),
                     width: width * 0.7,
-                    height: width * 0.7,
+                    height: width * 0.8,
                     child: Column(children: [
                       Text(
                         widget.text + widget.secondery,
@@ -1448,25 +1458,85 @@ class _ballonState extends State<_BallonPage> {
                               Container(width: 20),
                             ],
                           ),
+                      Container(
+                          height:52
+                      ),
+                      Stack(children:[Column(children:[Container(
+                        width: 384,
+                        height: 2,decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0x2d34248a),
+                          width: 1,
+                        ),
+                      ),
+                      ),
+                      Container(
+                        height:42
+                      ),
+                      Container(
+                        width: 350,
+                        height: 2,decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0x2d34248a),
+                          width: 1,
+                        ),
+                      ),
+                      ),
+                      Container(
+                          height:42
+                      ),Container(
+                        width: 264,
+                        height: 2,decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0x2d34248a),
+                          width: 1,
+                        ),
+                      ),
+                      ),
+                      Container(
+                          height:42
+                      ),Container(
+                  width: 264,
+                  height: 2,decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Color(0x2d34248a),
+                  width: 1,
+                ),
+          ),
+        ),
+            ]),
 
-                      TextField(
-                        textAlign: TextAlign.center,
+                      Positioned(child:TextFormField(
+                        textAlign: TextAlign.start,
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 16,
+                          fontSize: 18,
+                          height:2,
                           fontFamily: "Assistant",
                           fontWeight: FontWeight.w300,
                         ),
+                        decoration: InputDecoration(
+                          hintText: 'Type Text Here',
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          ),
                         textDirection: TextDirection.rtl,
                         controller: _controller,
                         maxLines: 4,
+
                       )
+
+                      )])
                     ]),
                   ),
                 )
               ],
             ),
           ),
-        ));
+        )));
   }
 }
