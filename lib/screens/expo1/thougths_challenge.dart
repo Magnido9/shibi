@@ -23,6 +23,7 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'body.dart';
 import 'feelings.dart';
+import 'final_expo.dart';
 import 'thoughts.dart';
 import 'dart:ui';
 import 'dart:math';
@@ -49,15 +50,16 @@ class ThoughtsChallenge extends StatelessWidget {
         initialRoute: '/',
         routes: {
           // When navigating to the "/" route, build the FirstScreen widget.
-          '/': (context) => _Page1(),
+          '/': (context) => _Page1(on: [true,true,true],),
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/second': (context) => _Page2(),
           '/main': (context) => _Main(),
+          '/final': (context) => FinalExpo(adata:adata,theCase:theCase),
           '/thoughts/1': (context) => thought1_1(),
           '/thoughts/2': (context) => thought2_1(),
           '/feelings/1': (context) => feeling1_1(),
           '/body/1': (context) => body1_1(),
-          '/tools': (context) => tools(theCase: theCase,adata: adata),
+          '/tools': (context) => tools(theCase: theCase, adata: adata),
         },
       ),
     );
@@ -65,45 +67,54 @@ class ThoughtsChallenge extends StatelessWidget {
 }
 
 class _Page1 extends StatefulWidget {
+
+  List<bool> on=[true,true,true];
+  _Page1({required this.on});
   @override
-  _Page1State createState() => _Page1State();
+  _Page1State createState() => _Page1State(on:on);
 }
 
 class _Page1State extends State<_Page1> {
+  _Page1State({required this.on});
+  List<bool> on=[true,true,true];
   double feeling = 0;
   var chosen = [];
   var replies;
   var thoughts;
   var _data;
 
-  static  load() async {
+  static load() async {
     print("aa");
     String? pid = AuthRepository.instance().user?.uid;
-    var v =
-    (await FirebaseFirestore.instance.collection("balloons").doc(pid).get());
+    var v = (await FirebaseFirestore.instance
+        .collection("balloons")
+        .doc(pid)
+        .get());
     print(v['chosen']);
 
     return v;
   }
+
   @override
   void initState() {
     super.initState();
     _data = load();
   }
+
   @override
   Widget build(BuildContext context) {
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     print(width);
     return Scaffold(
-      body:  Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Colors.lightBlueAccent, Colors.white])),child:Stack(children: [
+        body: Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.lightBlueAccent, Colors.white])),
+      child: Stack(children: [
         Positioned(
             top: -150,
             child: Container(
@@ -119,10 +130,8 @@ class _Page1State extends State<_Page1> {
                   }),
               // color:Colors.green
             )),
-
-        Positioned(right:0,top:300,child:Image.asset("images/cloud1.png")),
-        Positioned(left:0,top:400,child:Image.asset("images/cloud2.png")),
-
+        Positioned(right: 0, top: 300, child: Image.asset("images/cloud1.png")),
+        Positioned(left: 0, top: 400, child: Image.asset("images/cloud2.png")),
         Align(
           alignment: Alignment.topRight,
           child: Container(
@@ -131,7 +140,7 @@ class _Page1State extends State<_Page1> {
               disabledElevation: 0,
               backgroundColor: Colors.grey.shade400,
               onPressed: () {
-                Navigator.pushNamed(context,'/tools');
+                Navigator.pushNamed(context, '/tools');
               },
               child: Icon(Icons.arrow_forward),
             ),
@@ -254,7 +263,8 @@ class _Page1State extends State<_Page1> {
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                         ),
-                      ),Text(
+                      ),
+                      Text(
                         " הם חזרו לנקמה",
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,
@@ -270,82 +280,148 @@ class _Page1State extends State<_Page1> {
                 Container(width: 20),
               ],
             )),
-
-
-
-          FutureBuilder(
-              future: _data,
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-
-                if (snapshot.hasData) {
-                  chosen=snapshot.data['chosen'];
-                  thoughts=snapshot.data['thoughts'];
-                  replies=snapshot.data['replies'];
-                  return Stack(children:[
-
-                    Positioned(  top: height*0.53,
-                    left: width*0.11,
-                    child:GestureDetector(child: Baloon(color:chosen[0], diameter: width*0.316, angle: -0.3, text: thoughts[chosen[0]],secondery:replies[chosen[0]],),
-
-                        onTap: () async {
+        FutureBuilder(
+            future: _data,
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData) {
+                chosen = snapshot.data['chosen'];
+                thoughts = snapshot.data['thoughts'];
+                replies = snapshot.data['replies'];
+                return Stack(children: [
+                  (on[0])?
+                  Positioned(
+                      top: height * 0.53,
+                      left: width * 0.11,
+                      child: GestureDetector(
+                          child: Baloon(
+                            color: chosen[0],
+                            diameter: width * 0.316,
+                            angle: -0.3,
+                            text: thoughts[chosen[0]],
+                            secondery: replies[chosen[0]],
+                          ),
+                          onTap: () async {
                             var x = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => _BallonPage(
-                                    color: 0,
-                                    text: thoughts[0],
-                                    secondery: replies[0],
-                                  )),
+                                        on:on,
+                                        num:0,
+                                        color: chosen[0],
+                                        text: thoughts[chosen[0]],
+                                        secondery: replies[chosen[0]],
+                                      )),
                             );
                             print(chosen);
-
-                        }
-
-
-                    )),
-                Positioned(
-                child: Baloon(color:chosen[1], diameter: width*0.316, angle: 0.3, text: thoughts[chosen[1]],secondery: replies[chosen[1]],),
-                top: height*0.47,
-                right: width*0.19,
-                ),
-                Positioned(
-                child: Baloon(color:chosen[2], diameter: width*0.34, angle: 0, text: thoughts[chosen[2]],secondery: replies[chosen[2]],),
-                top: height*0.3,
-                left: width*0.3,)]);
-                } else
-                  return CircularProgressIndicator(
-                    color: Colors.green,
-                  );
-              }),
-             Positioned( child:Stack(
-                            children: [
-                              Positioned(
-                                  top: height*0.46,
-                                  left: width*0.22,
-                                  child: Container(
-                                    width: width*0.5,
-                                    height: height*0.5,
-                                    child: FittedBox(
-                                      fit: BoxFit.fitHeight,
-                                      child: Image.asset('images/strings.png'),
-                                    ),
-                                  )
-                              ),
-                              Positioned(
-    top: height*0.92,
-    left: width*0.15,child:Image.asset('images/handsbaloon.png')),
-
-               /*
+                          })):Container(),
+                  on[1]?
+                  Positioned(
+                    child: GestureDetector(
+                        child: Baloon(
+                          color: chosen[1],
+                          diameter: width * 0.316,
+                          angle: 0.3,
+                          text: thoughts[chosen[1]],
+                          secondery: replies[chosen[1]],
+                        ),
+                        onTap: () async {
+                          var x = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => _BallonPage(
+                                  on:on,
+                                  num:1,
+                                      color: chosen[1],
+                                      text: thoughts[chosen[1]],
+                                      secondery: replies[chosen[1]],
+                                    )),
+                          );
+                          print(chosen);
+                        }),
+                    top: height * 0.47,
+                    right: width * 0.19,
+                  ):Container(),
+                  on[2]?
+                  Positioned(
+                    child: GestureDetector(
+                        child: Baloon(
+                          color: chosen[2],
+                          diameter: width * 0.34,
+                          angle: 0,
+                          text: thoughts[chosen[2]],
+                          secondery: replies[chosen[2]],
+                        ),
+                        onTap: () async {
+                          var x = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => _BallonPage(
+                                  on:on,
+                                  num:2,
+                                      color: chosen[2],
+                                      text: thoughts[chosen[2]],
+                                      secondery: replies[chosen[2]],
+                                    )),
+                          );
+                          print(chosen);
+                        }),
+                    top: height * 0.3,
+                    left: width * 0.3,
+                  ):Container()
+                ]);
+              } else
+                return CircularProgressIndicator(
+                  color: Colors.green,
+                );
+            }),
+        Positioned(
+            child: Stack(
+          children: [
+            Positioned(
+                top: height * 0.46,
+                left: width * 0.22,
+                child: Container(
+                  width: width * 0.5,
+                  height: height * 0.5,
+                  child: FittedBox(
+                    fit: BoxFit.fitHeight,
+                    child: Image.asset('images/strings.png'),
+                  ),
+                )),
+            Positioned(
+                top: height * 0.92,
+                left: width * 0.15,
+                child: Image.asset('images/handsbaloon.png')),
+            Positioned(
+                top: height * 0.92,
+                right: width * 0.8,
+                child: (!on[0] && !on[1] && !on[2])
+                    ? Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color(0xff35258a),
+                        shape: CircleBorder(),
+                        fixedSize: Size(55, 55),
+                      ),
+                      child: Icon(
+                        Icons.arrow_back,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      onPressed: () async {
+                        Navigator.pushNamed(context,'/final');
+                      },
+                    )
+                  ],
+                )
+                    : Container())
+            /*
 
                               */
-
-
-                            ],)
-
-
-                      )
-
-
+          ],
+        ))
       ]),
     ));
   }
@@ -494,7 +570,6 @@ class _Page2State extends State<_Page2> {
                 ),
               ),
               Container(width: 10),
-
               Container(
                 margin: EdgeInsets.only(right: 10, left: 0, bottom: 10),
                 child: Column(
@@ -520,81 +595,127 @@ class _Page2State extends State<_Page2> {
                           fontSize: 16,
                           fontWeight: FontWeight.w600),
                     ),
-
                   ],
                 ),
               ),
-
               Container(width: 20),
             ],
           )),
+      Positioned(
+          bottom: 170,
+          right: 202,
+          child: Stack(children: [
+            Image.asset("images/talk.png"),
+            Positioned(
+                top: 20,
+                left: 20,
+                child: Container(
+                    width: 125,
+                    height: 90,
+                    child: Text(
+                      "תוכלו לבחור גם בדרכים אחרות כמו בתעמלות שיחה עם חבר, אומנות או יצירה",
+                      textDirection: TextDirection.rtl,
+                    )))
+          ])),
+      Positioned(
+          left: 0,
+          right: 0,
+          top: height * 0.5,
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            GestureDetector(
+              child: Container(
+                  height: 80,
+                  child: Stack(children: [
+                    Image.asset('images/spotify.png'),
+                    Positioned(
+                        bottom: 0,
+                        left: 8,
+                        right: 8,
+                        child: Text("Spotify",
+                            style: GoogleFonts.assistant(
+                                fontSize: 14, fontWeight: FontWeight.w600)))
+                  ])),
+              onTap: () async {
+                bool isInstalled = await DeviceApps.isAppInstalled('spotify');
 
-          Positioned(bottom:170,right:202,child:Stack(children:[Image.asset("images/talk.png"),Positioned(top:20,left:20,child:Container(width:125,height:90,child:Text("תוכלו לבחור גם בדרכים אחרות כמו בתעמלות שיחה עם חבר, אומנות או יצירה",textDirection: TextDirection.rtl,)))])),
-          Positioned(
-            left:0,
-              right:0,
-              top:height*0.5,
-              child:
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children:[
-                GestureDetector(child:Container(height:80,child:Stack(children:[Image.asset('images/spotify.png'),Positioned(bottom:0,left:8,right:8,child:Text("Spotify",style:GoogleFonts.assistant(fontSize:14,fontWeight: FontWeight.w600)))])),
-                onTap: () async {
-                  bool isInstalled =
-                  await DeviceApps.isAppInstalled('spotify');
+                if (isInstalled != false) {
+                  AndroidIntent intent =
+                      AndroidIntent(action: 'action_view', data: 'spotify');
+                  await intent.launch();
+                } else {
+                  String url = 'com.spotify.music';
+                  print(await DeviceApps.getApp('Spotify'));
+                  DeviceApps.openApp('com.spotify.music');
+                }
+              },
+            ),
+            GestureDetector(
+              child: Container(
+                  height: 80,
+                  child: Stack(children: [
+                    Image.asset('images/youtube.png'),
+                    Positioned(
+                        right: 2,
+                        left: 2,
+                        bottom: 0,
+                        child: Text("YouTube",
+                            style: GoogleFonts.assistant(
+                                fontSize: 14, fontWeight: FontWeight.w600)))
+                  ])),
+              onTap: () async {
+                bool isInstalled = await DeviceApps.isAppInstalled('youtube');
 
-                  if (isInstalled != false) {
-                    AndroidIntent intent = AndroidIntent(
-                        action: 'action_view', data: 'spotify');
-                    await intent.launch();
-                  } else {
-                    String url = 'com.spotify.music';
-                    print(await DeviceApps.getApp('Spotify'));
-                    DeviceApps.openApp('com.spotify.music');
-                  }
-                },
-              ),
-                GestureDetector(child:Container(height:80,child:Stack(children:[Image.asset('images/youtube.png'),Positioned(right:2,left:2,bottom:0,child:Text("YouTube",style:GoogleFonts.assistant(fontSize:14,fontWeight: FontWeight.w600)))])),
-                onTap: () async {
-                  bool isInstalled =
-                  await DeviceApps.isAppInstalled('youtube');
+                if (isInstalled != false) {
+                  AndroidIntent intent =
+                      AndroidIntent(action: 'action_view', data: 'youtube');
+                  await intent.launch();
+                } else {
+                  String url = 'com.spotify.music';
+                  print(await DeviceApps.getApp('Spotify'));
+                  DeviceApps.openApp('com.google.android.youtube');
+                }
+              },
+            ),
+            GestureDetector(
+              child: Container(
+                  height: 80,
+                  child: Stack(children: [
+                    Image.asset('images/apple-music.png'),
+                    Positioned(
+                        bottom: 0,
+                        left: 7,
+                        right: 7,
+                        child: Text("Apple",
+                            style: GoogleFonts.assistant(
+                                fontSize: 14, fontWeight: FontWeight.w600)))
+                  ])),
+              onTap: () async {
+                bool isInstalled =
+                    await DeviceApps.isAppInstalled('com.apple.android.music');
 
-                  if (isInstalled != false) {
-                    AndroidIntent intent = AndroidIntent(
-                        action: 'action_view', data: 'youtube');
-                    await intent.launch();
-                  } else {
-                    String url = 'com.spotify.music';
-                    print(await DeviceApps.getApp('Spotify'));
-                    DeviceApps.openApp('com.google.android.youtube');
-                  }
-                },
-              ),
-                GestureDetector(child:Container(height:80,child:Stack(children:[Image.asset('images/apple-music.png'),Positioned(bottom:0,left:7,right:7,child:Text("Apple",style:GoogleFonts.assistant(fontSize:14,fontWeight: FontWeight.w600)))])),
-                onTap: () async {
-                  bool isInstalled =
-                  await DeviceApps.isAppInstalled('com.apple.android.music');
-
-                  if (isInstalled != false) {
-                    AndroidIntent intent = AndroidIntent(
-                        action: 'action_view', data: 'com.apple.android.music');
-                    await intent.launch();
-                  } else {
-                    DeviceApps.openApp('com.apple.android.music');
-                  }
-                },
-              ),
-
-              ]))
-          ,Positioned(bottom:20,right:10,child:Image.asset("images/skater2.png")),
-          Positioned(bottom:28,left:21,child:
-          Stack(children: [
+                if (isInstalled != false) {
+                  AndroidIntent intent = AndroidIntent(
+                      action: 'action_view', data: 'com.apple.android.music');
+                  await intent.launch();
+                } else {
+                  DeviceApps.openApp('com.apple.android.music');
+                }
+              },
+            ),
+          ])),
+      Positioned(
+          bottom: 20, right: 10, child: Image.asset("images/skater2.png")),
+      Positioned(
+          bottom: 28,
+          left: 21,
+          child: Stack(children: [
             Container(
                 width: 142,
                 height: 39,
                 child: MaterialButton(
                     onPressed: () {
-                          Navigator.pushNamed(context, '/tools');
+                      Navigator.pushNamed(context, '/tools');
                     },
                     minWidth: 142,
                     height: 39,
@@ -627,12 +748,9 @@ class _Page2State extends State<_Page2> {
                       borderRadius: BorderRadius.circular(36),
                       border: Border.all(color: Colors.white, width: 9),
                     ))),
-          ])
-          )
-
+          ]))
     ]));
   }
-
 }
 
 class _Main extends StatefulWidget {
@@ -671,8 +789,8 @@ class _MainState extends State<_Main> {
             elevation: 0,
             disabledElevation: 0,
             backgroundColor: Colors.grey.shade400,
-            onPressed: ()  {
-               Navigator.pushNamed(context,'/tools');
+            onPressed: () {
+              Navigator.pushNamed(context, '/tools');
             },
             child: Icon(Icons.arrow_forward),
           ),
@@ -1263,12 +1381,15 @@ class _PaintTask extends CustomPainter {
     return (slices != oldDelegate.slices) || (complete != oldDelegate.complete);
   }
 }
+
 class _BallonPage extends StatefulWidget {
   _BallonPage(
-      {required this.text, required this.color, required this.secondery});
+      {required this.text, required this.color, required this.secondery, required this.num, required this.on});
+  final int num;
   final int color;
   final String text;
   final String secondery;
+  List<bool> on;
   @override
   _ballonState createState() => _ballonState();
 }
@@ -1276,7 +1397,12 @@ class _BallonPage extends StatefulWidget {
 class _ballonState extends State<_BallonPage> {
   TextEditingController? _controller;
   double height = 0, width = 0;
-
+  final colors = [
+    Color(0xffDEEEF3),
+    Color(0xffDEEEF3),
+    Color(0xffCFC781),
+    Color(0xff81CF8D),
+  ];
   @override
   void initState() {
     _controller = TextEditingController(text: widget.secondery);
@@ -1304,88 +1430,105 @@ class _ballonState extends State<_BallonPage> {
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.pop(context, _controller?.text.trim());
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        _BaboomPage(color: this.widget.color,num:this.widget.num,on:this.widget.on)));
               },
             )
           ],
         ),
-        body:  Container(
-    decoration: BoxDecoration(
-    gradient: LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [Colors.lightBlueAccent, Colors.white])),child:SingleChildScrollView(
-          child: Container(
-            width: width,
-            height: height,
-            child: Stack(
-              children: [
-                Positioned(
-                    bottom: height * 0.8,
-                    right: width * 0.8,
-                    child: Container(
-                      width: 252,
-                      height: 252,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0x4280cf8d),
-                      ),
-                    )
-                ),
-                Positioned(
-                    bottom: height * 0.95,
-                    left: width * 0.5,
-                    child: Container(
-                      width: 365,
-                      height: 365,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xffe0cbdc),
-                      ),
-                    )
-                ),
-                Positioned(
-                    top: height * 0.6,
-                    left: width * 0.7,
-                    child: Container(
-                      width: 451,
-                      height: 447,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xfff3f1de),
-                      ),
-                    )),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                      padding: EdgeInsets.only(top: height * 0.1),
-                      child: Baloon(
-                        id: 1,
-                        angle: 0,
-                        diameter: width *1.2,
-                        color: widget.color,
-                        text: '',
-                      )),
-                ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    margin: EdgeInsets.only(top: height * 0.2),
-                    width: width * 0.7,
-                    height: width * 0.8,
-                    child: Column(children: [
-                      Text(
-                        widget.text + widget.secondery,
-                        textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.right,
-                        style: GoogleFonts.assistant(
-                          color: Color(0xff35258a),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    Container(height:20),
-                    Row(
+        body: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.lightBlueAccent, Colors.white])),
+            child: SingleChildScrollView(
+              child: Container(
+                width: width,
+                height: height,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        bottom: height * 0.8,
+                        right: width * 0.8,
+                        child: Container(
+                          width: 252,
+                          height: 252,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0x4280cf8d),
+                          ),
+                        )),
+                    Positioned(
+                        bottom: height * 0.95,
+                        left: width * 0.5,
+                        child: Container(
+                          width: 365,
+                          height: 365,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xffe0cbdc),
+                          ),
+                        )),
+                    Positioned(
+                        top: height * 0.6,
+                        left: width * 0.7,
+                        child: Container(
+                          width: 451,
+                          height: 447,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xfff3f1de),
+                          ),
+                        )),
+                    Positioned(
+                      top: 80,
+                      right: -width * 0.1,
+                      left: -width * 0.1,
+                      child: Container(
+                          width: width * 1.2,
+                          height: width * 1.12,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Color(0xff90c2ab),
+                              width: 4,
+                            ),
+                            shape: BoxShape.circle,
+                            color: colors[widget.color % 4],
+                          )),
+                    ),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                          padding: EdgeInsets.only(top: height * 0.1),
+                          child: Baloon(
+                            id: 1,
+                            angle: 0,
+                            diameter: width * 1.2,
+                            color: widget.color,
+                            text: '',
+                          )),
+                    ),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        margin: EdgeInsets.only(top: height * 0.2),
+                        width: width * 0.7,
+                        height: width * 0.8,
+                        child: Column(children: [
+                          Text(
+                            widget.text + widget.secondery,
+                            textDirection: TextDirection.rtl,
+                            textAlign: TextAlign.right,
+                            style: GoogleFonts.assistant(
+                              color: Color(0xff35258a),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Container(height: 20),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -1394,7 +1537,8 @@ class _ballonState extends State<_BallonPage> {
                                   child: Center(
                                     child: Text(
                                       '?',
-                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
                                     ),
                                   ),
                                   width: 26,
@@ -1406,8 +1550,10 @@ class _ballonState extends State<_BallonPage> {
                                 ),
                                 onTap: () => showDialog<String>(
                                   context: context,
-                                  builder: (BuildContext context) => BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                  builder: (BuildContext context) =>
+                                      BackdropFilter(
+                                    filter:
+                                        ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                                     child: AlertDialog(
                                       backgroundColor: Color(0xffECECEC),
                                       content: RichText(
@@ -1419,13 +1565,15 @@ class _ballonState extends State<_BallonPage> {
                                           ),
                                           children: <TextSpan>[
                                             //
-                                            TextSpan(text: 'עוד לא הוכנס מלל.\n'),
+                                            TextSpan(
+                                                text: 'עוד לא הוכנס מלל.\n'),
                                           ],
                                         ),
                                       ),
                                       actions: <Widget>[
                                         TextButton(
-                                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
                                           child: const Text(
                                             'x',
                                             style: TextStyle(fontSize: 20),
@@ -1438,7 +1586,8 @@ class _ballonState extends State<_BallonPage> {
                               ),
                               Container(width: 80),
                               Container(
-                                margin: EdgeInsets.only(right: 0, left: 0, bottom: 10),
+                                margin: EdgeInsets.only(
+                                    right: 0, left: 0, bottom: 10),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
@@ -1458,85 +1607,246 @@ class _ballonState extends State<_BallonPage> {
                               Container(width: 20),
                             ],
                           ),
-                      Container(
-                          height:52
+                          Container(height: 52),
+                          Stack(children: [
+                            Column(children: [
+                              Container(
+                                width: 384,
+                                height: 2,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0x2d34248a),
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              Container(height: 42),
+                              Container(
+                                width: 350,
+                                height: 2,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0x2d34248a),
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              Container(height: 42),
+                              Container(
+                                width: 264,
+                                height: 2,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0x2d34248a),
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              Container(height: 42),
+                              Container(
+                                width: 264,
+                                height: 2,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0x2d34248a),
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                            ]),
+                          ])
+                        ]),
                       ),
-                      Stack(children:[Column(children:[Container(
-                        width: 384,
-                        height: 2,decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Color(0x2d34248a),
-                          width: 1,
-                        ),
-                      ),
-                      ),
-                      Container(
-                        height:42
-                      ),
-                      Container(
-                        width: 350,
-                        height: 2,decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Color(0x2d34248a),
-                          width: 1,
-                        ),
-                      ),
-                      ),
-                      Container(
-                          height:42
-                      ),Container(
-                        width: 264,
-                        height: 2,decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Color(0x2d34248a),
-                          width: 1,
-                        ),
-                      ),
-                      ),
-                      Container(
-                          height:42
-                      ),Container(
-                  width: 264,
-                  height: 2,decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Color(0x2d34248a),
-                  width: 1,
+                    ),
+                    Positioned(
+                        top: height * 0.32,
+                        right: width * 0.18,
+                        left: width * 0.18,
+                        child: TextFormField(
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            height: 2.25,
+                            fontFamily: "Assistant",
+                            fontWeight: FontWeight.w300,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: '...',
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                          ),
+                          textDirection: TextDirection.rtl,
+                          controller: _controller,
+                          maxLines: 4,
+                        )),
+                  ],
                 ),
-          ),
-        ),
-            ]),
+              ),
+            )));
+  }
+}
 
-                      Positioned(child:TextFormField(
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          height:2,
-                          fontFamily: "Assistant",
-                          fontWeight: FontWeight.w300,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Type Text Here',
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          ),
-                        textDirection: TextDirection.rtl,
-                        controller: _controller,
-                        maxLines: 4,
+class _BaboomPage extends StatefulWidget {
+  _BaboomPage({required this.color,required this.num,required this.on});
+  final int color;
+  final int num;
+  List<bool> on;
+  @override
+  _baboomState createState() => _baboomState();
+}
 
-                      )
+class _baboomState extends State<_BaboomPage> {
+  TextEditingController? _controller;
+  int stage=1;
+  double height = 0, width = 0;
+  final colors = [
+    Color(0xffDEEEF3),
+    Color(0xffDEEEF3),
+    Color(0xffCFC781),
+    Color(0xff81CF8D),
+  ];
+  @override
+  void initState() {
+    super.initState();
+  }
 
-                      )])
-                    ]),
-                  ),
-                )
-              ],
-            ),
-          ),
-        )));
+  @override
+  Widget build(BuildContext context) {
+    if (width == 0) width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+        body: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.lightBlueAccent, Colors.white])),
+            child: SingleChildScrollView(
+              child: Container(
+                width: width,
+                height: height,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        bottom: height * 0.8,
+                        right: width * 0.8,
+                        child: Container(
+                          width: 252,
+                          height: 252,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0x4280cf8d),
+                          ),
+                        )),
+                    Positioned(
+                        bottom: height * 0.95,
+                        left: width * 0.5,
+                        child: Container(
+                          width: 365,
+                          height: 365,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xffe0cbdc),
+                          ),
+                        )),
+                    Positioned(
+                        top: height * 0.6,
+                        left: width * 0.7,
+                        child: Container(
+                          width: 451,
+                          height: 447,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xfff3f1de),
+                          ),
+                        )),
+                    (stage==1)?TweenAnimationBuilder(
+                        tween: Tween(begin: height, end: height),
+                        duration: Duration(seconds: 10),
+                        builder: (context, double h, w) {
+                          Provider.of<ExpoData>(context, listen: false)
+                              .done[2] = true;
+                          Future.delayed(const Duration(seconds: 1), () {
+                            setState(() {
+                              stage=2;
+                            }); });
+                          return  Positioned(
+                            top: 80,
+                            right: -width * 0.1,
+                            left: -width * 0.1,
+                            child: Container(
+                                width: width * 1.2,
+                                height: width * 1.12,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0xff90c2ab),
+                                    width: 4,
+                                  ),
+                                  shape: BoxShape.circle,
+                                  color: colors[widget.color % 4],
+                                )),
+                          )
+                            ;
+                        }):(stage==2)?TweenAnimationBuilder(
+                        tween: Tween(begin: height, end: height),
+                        duration: Duration(seconds: 10),
+                        builder: (context, double h, w) {
+                          Provider.of<ExpoData>(context, listen: false)
+                              .done[2] = true;
+                          Future.delayed(const Duration(seconds: 1), () {
+                            setState(() {
+                              stage=3;
+                            }); });
+                          return  Positioned(
+                            top: 80,
+                            right: -width * 0.1,
+                            left: -width * 0.1,
+                            child: Container(
+                                width: width * 1.2,
+                                height: width * 1.12,
+                                child:Image.asset('images/boom1.png')   ),
+                          )
+                          ;
+                        }):TweenAnimationBuilder(
+                        tween: Tween(begin: height, end: height),
+                        duration: Duration(seconds: 10),
+                        builder: (context, double h, w) {
+                          Provider.of<ExpoData>(context, listen: false)
+                              .done[2] = true;
+                          Future.delayed(const Duration(seconds: 3), () {
+                            var t=this.widget.on;
+                            t[this.widget.num]=false;
+    setState(() {
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+    builder: (BuildContext context) =>
+    _Page1(on: t)));
+    }); });
+                          return  Positioned(
+                            top: 80,
+                            right: -width * 0.1,
+                            left: -width * 0.1,
+                            child: Container(
+                                width: width * 1.2,
+                                height: width * 1.12,
+                            child:Image.asset('images/boom2.png')
+                            ),
+                          )
+                          ;
+                        }),
+                    Positioned(
+                      top:(stage==1)? height * 0.4:(stage==2)?height*0.35:height*0.37,
+                      left: 0,
+                      child: Image.asset('images/needle.png'),
+                    ),
+                  ],
+                ),
+              ),
+            )));
   }
 }

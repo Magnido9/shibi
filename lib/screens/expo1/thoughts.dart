@@ -698,8 +698,8 @@ class Baloon extends StatelessWidget {
   final colors = [
     Color(0xffDEEEF3),
     Color(0xffDEEEF3),
-    Color(0xffCFC781).withOpacity(0.26),
-    Color(0xff81CF8D).withOpacity(0.26),
+    Color(0xffCFC781),
+    Color(0xff81CF8D),
   ];
 
   @override
@@ -717,6 +717,14 @@ class Baloon extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.blue)),
             ),
+          Container(
+            width: diameter,
+            height: diameter*0.93,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: colors[color % 4],
+            ),
+          ),
           Transform.rotate(
             angle: angle,
             child: ImageColorSwitcher(
