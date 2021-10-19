@@ -147,7 +147,16 @@ flutter:
     - images/Soldier1.png
     - images/Soldier2.png
     - images/Soldier3.png
-
+    - images/Soldier4.png
+    - images/Yellow_Star.png
+    - images/Blue_Star.png
+    - images/Green_Star.png
+    - images/Pink_Star.png
+    - images/thumbsup.png
+    - images/smiley.png
+    - images/human.png
+    - images/cloud.png
+    - images/talky.png
 
     - music/meditation.mp3
   uses-material-design: true

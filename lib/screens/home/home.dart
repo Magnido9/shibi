@@ -10,6 +10,7 @@ import 'package:application/screens/map/map.dart';
 import 'package:application/screens/map/meditation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Avatar/avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,22 +25,36 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  static Future<String> loadMoney() async {
+    String? pid = AuthRepository.instance().user?.uid;
+    var v =
+        (await FirebaseFirestore.instance.collection("avatars").doc(pid).get());
+    print('load');
+    var a = v['money'];
+    var s = a.toString();
+    print("ADADSDASD       " + a.toString());
+    return s;
+  }
+
   Future<AvatarData>? _adata;
   Future<String>? _name;
-
+  var moneyd;
   @override
   void initState() {
     super.initState();
     _adata = AvatarData.load();
     _name = _getname();
+    moneyd = loadMoney();
     reset();
   }
 
   Future<String> _getname() async {
-    return (await FirebaseFirestore.instance
+    var name = (await FirebaseFirestore.instance
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
+    print(name);
+    return name;
   }
 
   static const countdownDuration = Duration(seconds: 4);
@@ -270,25 +285,179 @@ class _HomeState extends State<Home> {
           ]);
   }
 
-  Widget homeBody(size) {
-    return Column(
-      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Stack(
+  Widget homeBody(size, _name) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    return Container(
+        height: height * 0.7,
+        width: width,
+        child: Stack(
           children: [
-            Container(
-              child: TweenAnimationBuilder<double>(
-                  tween: Tween<double>(begin: 0, end: 0.7),
-                  duration: Duration(seconds: 1),
-                  builder:
-                      (BuildContext context, double percent, Widget? child) {
-                    return CustomPaint(
-                        painter: _LoadBar(percent: percent, size: size),
-                        size: size);
-                  }),
-              // color:Colors.green
+            Column(children: [
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Container(
+                    margin: EdgeInsets.fromLTRB(20, 20, 50, 5),
+                    child: nameIt(_name, Colors.white))
+              ]),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Container(
+                    margin: EdgeInsets.fromLTRB(20, 20, 50, 5),
+                    child: Text(
+                      'כוכבי הלעת יעזרו לכם להבין טוב יותר את החרדה,\n ולהבין באיזה כלים אתם בדרך כלל משתמשים, \nעל מנת שתוכלו להחזיק ולהשלים את ארגז הכלים שלכם ',
+                      textDirection: TextDirection.rtl,
+                      style: GoogleFonts.assistant(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white),
+                    ))
+              ]),
+              // width:MediaQuery.of(context).size.width,
+            ]),
+            Positioned(
+              right: 20,
+              top: height * 0.25,
+              child: Container(
+                  height: 200,
+                  width: 200,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                          left: 5,
+                          child: Container(
+                            width: 165,
+                            height: 165,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x0c000000),
+                                  blurRadius: 18,
+                                  offset: Offset(0, -2),
+                                ),
+                              ],
+                              color: Color(0xfffaf5c6),
+                            ),
+                          )),
+                      Image.asset('images/Yellow_Star.png'),
+                      Positioned(
+                          child: Text(
+                            'מחשבות',
+                            style: GoogleFonts.assistant(),
+                          ),
+                          right: 85,
+                          top: 70),
+                    ],
+                  )),
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Positioned(
+                left: 70,
+                top: MediaQuery.of(context).size.height * 0.3,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        left: 5,
+                        child: Container(
+                          width: 98,
+                          height: 98,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x0c000000),
+                                blurRadius: 18,
+                                offset: Offset(0, -2),
+                              ),
+                            ],
+                            color: Color(0xffa9e1f4),
+                          ),
+                        )),
+                    Image.asset('images/Blue_Star.png'),
+                    Positioned(
+                        child: Text(
+                          'רגש',
+                          style: GoogleFonts.assistant(),
+                        ),
+                        right: 43,
+                        top: 35),
+                  ],
+                )),
+            Positioned(
+              left: 5,
+              top: height * 0.45,
+              child: Container(
+                  height: 100,
+                  width: 100,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                          left: 7,
+                          top: 7,
+                          child: Container(
+                            width: 74,
+                            height: 74,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x0c000000),
+                                  blurRadius: 18,
+                                  offset: Offset(0, -2),
+                                ),
+                              ],
+                              color: Color(0xffefb3e2),
+                            ),
+                          )),
+                      Image.asset('images/Pink_Star.png'),
+                      Positioned(
+                          child: Text(
+                            'התנהגות',
+                            style: GoogleFonts.assistant(),
+                          ),
+                          right: 28,
+                          top: 32),
+                    ],
+                  )),
+            ),
+            Positioned(
+              right: 150,
+              top: height * 0.50,
+              child: Container(
+                  height: 150,
+                  width: 150,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                          left: 3,
+                          top: -1,
+                          child: Container(
+                            width: 132,
+                            height: 132,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x0c000000),
+                                  blurRadius: 18,
+                                  offset: Offset(0, -2),
+                                ),
+                              ],
+                              color: Color(0xffc7f5e0),
+                            ),
+                          )),
+                      Image.asset('images/Green_Star.png'),
+                      Positioned(
+                          child: Text(
+                            'גוף',
+                            style: GoogleFonts.assistant(),
+                          ),
+                          right: 75,
+                          top: 55),
+                    ],
+                  )),
+            ) /*Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                  // color: Colors.green,
+                  height: 500),
               Container(
                   // color: Colors.green,
                   width: size.width * 0.5,
@@ -308,9 +477,6 @@ class _HomeState extends State<Home> {
             ])
           ],
         ),
-        Container(
-          height: 30,
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -327,10 +493,9 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
+         */
           ],
-        )
-      ],
-    );
+        ));
   }
 
   Widget diaryBody() {
@@ -407,222 +572,325 @@ class _HomeState extends State<Home> {
       ])
     ]);
   }
-Widget psychoBody(){
-  return Stack(children: <Widget>[
-    Positioned(
-        left: -((0.8125 * MediaQuery.of(context).size.height) -
-            MediaQuery.of(context).size.width) /
-            4,
-        top: -0.2 * MediaQuery.of(context).size.height,
-        child: Container(
-            width: 0.8125 * MediaQuery.of(context).size.height,
-            height: 0.8125 * MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.pink,
-            ))),
-    Column(children: <Widget>[
-      Text(
-        "הנה מתקן חרדת חמודי עכשיו אין חרדה!",
-        textDirection: TextDirection.rtl,
-        textAlign: TextAlign.left,
-        style: GoogleFonts.assistant(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-     Card(
 
-        shape:RoundedRectangleBorder(
-  borderRadius: BorderRadius.circular(36)
+  Widget psychoBody() {
+    return Stack(children: <Widget>[
+      Positioned(
+          left: -((0.8125 * MediaQuery.of(context).size.height) -
+                  MediaQuery.of(context).size.width) /
+              4,
+          top: -0.2 * MediaQuery.of(context).size.height,
+          child: Container(
+              width: 0.8125 * MediaQuery.of(context).size.height,
+              height: 0.8125 * MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.pink,
+              ))),
+      Column(children: <Widget>[
+        Text(
+          "הנה מתקן חרדת חמודי עכשיו אין חרדה!",
+          textDirection: TextDirection.rtl,
+          textAlign: TextAlign.left,
+          style: GoogleFonts.assistant(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
         ),
-
+        Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
           child: ExpansionTile(
-            title: Text('חרדה',style: GoogleFonts.assistant( fontSize: 12),),
+            title: Text(
+              'חרדה',
+              style: GoogleFonts.assistant(fontSize: 12),
+            ),
             children: <Widget>[
               Text('זה חרדה'),
               Text('אתה לא חרדה'),
               Text('תיקנתי איש אתה'),
             ],
           ),
-      ),
-      Container(height: 10),
-      Stack(children: [
-        Container(
-            width: 200,
-            height: 39,
-            child: MaterialButton(
-                onPressed: () {
-                  stopTimer();
-                },
-                minWidth: 200,
-                height: 39,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(36)),
-                color: Color(0xff35258a),
-                child: Stack(children: <Widget>[
-                  Positioned(
-                    top: 5,
-                    right: 50,
-                    child: Text(
-                      "הפסק!",
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.left,
-                      style: GoogleFonts.assistant(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
+        ),
+        Container(height: 10),
+        Stack(children: [
+          Container(
+              width: 200,
+              height: 39,
+              child: MaterialButton(
+                  onPressed: () {
+                    stopTimer();
+                  },
+                  minWidth: 200,
+                  height: 39,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(36)),
+                  color: Color(0xff35258a),
+                  child: Stack(children: <Widget>[
+                    Positioned(
+                      top: 5,
+                      right: 50,
+                      child: Text(
+                        "הפסק!",
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.assistant(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                  )
-                ]))),
-        Positioned(
-            top: 5,
-            right: 165,
-            child: Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(36),
-                  border: Border.all(color: Colors.white, width: 9),
-                ))),
+                    )
+                  ]))),
+          Positioned(
+              top: 5,
+              right: 165,
+              child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(36),
+                    border: Border.all(color: Colors.white, width: 9),
+                  ))),
+        ])
       ])
-    ])
-  ]);
-}
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'home',
-        home: Builder(
-          builder: (context) {
-            var x = min(MediaQuery.of(context).size.width,
-                MediaQuery.of(context).size.height);
-            var size = Size(x, 0.7 * x);
+    /*GestureDetector(
+                onTap: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                child: Icon(Icons.menu))*/
 
-            return Scaffold(
-                backgroundColor: Colors.white,
-                appBar: AppBar(
-                  backgroundColor: Colors.grey,
-                  elevation: 0.0,
-                  iconTheme: IconThemeData(color: Colors.black),
-                  leading: Builder(
-                    builder: (context) => GestureDetector(
-                        onTap: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        child: Icon(Icons.menu)),
-                  ),
+    var x = min(
+        MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
+    var size = Size(x, 0.7 * x);
+    return Scaffold(
+        appBar: AppBar(
+            centerTitle: true,
+            title: Padding(
+              padding: EdgeInsets.only(top: 25.0),
+              child: Text(
+                "מפת דרכים",
+                //textAlign: TextAlign.center,
+                style: GoogleFonts.assistant(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
                 ),
-                body: page_index == 0
-                    ? homeBody(size)
-                    : page_index == 1
-                        ? diaryBody()
-                        : page_index == 2
-                            ? psychoBody()
-                            : page_index == 3
-                                ? medBody()
-                                : homeBody(size),
-                drawer: Drawer(
-                  child: ListView(padding: EdgeInsets.zero, children: [
-                    DrawerHeader(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                        ),
-                        child: Row(
-                          children: [
-                            FutureBuilder<String>(
-                              future: _name,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<String> snapshot) {
-                                // ...
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  String data = snapshot.data ?? '';
-                                  return Text('Hello $data');
-                                }
-                                return CircularProgressIndicator();
-                              },
-                            ),
-                            FutureBuilder<AvatarData>(
-                              future: _adata,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<AvatarData> snapshot) {
-                                // ...
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  return AvatarStack(
-                                      data: (snapshot.data ??
-                                          AvatarData(
-                                              body: AvatarData.body_default
-                                          )));
-                                }
-                                return CircularProgressIndicator();
-                              },
-                            ),
-                          ],
-                        )),
-                    ListTile(
-                      title: const Text("עצב דמות"),
+              ),
+            ),
+            backgroundColor: Color(0xb2ffffff),
+            elevation: 0.0,
+            iconTheme: IconThemeData(color: Colors.black),
+            leading: Builder(
+                builder: (context) => GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                Avatar(first: false, data: _adata)));
+                        Scaffold.of(context).openDrawer();
                       },
-                    ),
-                    ListTile(
-                      title: const Text("מפה"),
-                      onTap: () {
-                        Future<void> _signOut() async {
-                          await FirebaseAuth.instance.signOut();
+                      child: Padding(
+                          padding: EdgeInsets.only(left: 20.0, top: 15.0),
+                          child: Icon(
+                            Icons.menu_rounded,
+                            size: 50,
+                          )),
+                    )),
+            actions: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(right: 20.0, top: 25.0),
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: FutureBuilder<String>(
+                      future: moneyd,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        // ...
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          String data = snapshot.data ?? '';
+                          print("datata:" + data);
+                          return build_money(data);
                         }
-
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) => Money(to_give: 10,first: false)));
+                        return CircularProgressIndicator();
                       },
                     ),
-                    ListTile(
-                      title: const Text("התנתק"),
-                      onTap: () {
-                        Future<void> _signOut() async {
-                          await FirebaseAuth.instance.signOut();
-                        }
-
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) => Login()));
-                      },
-                    ),
-                  ]),
+                  )),
+            ]),
+        backgroundColor: Colors.deepPurple,
+        body: Stack(
+          children: [
+            Positioned(
+              left: -((1 * MediaQuery.of(context).size.height) -
+                      MediaQuery.of(context).size.width) /
+                  2,
+              top: -0.91 * MediaQuery.of(context).size.height,
+              child: Container(
+                  width: 1 * MediaQuery.of(context).size.height,
+                  height: 1 * MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(
+                        0xb2ffffff,
+                      ))),
+            ),
+            Column(children: [
+              Container(
+                height: 80,
+              ),
+              (page_index == 0
+                  ? homeBody(size, _name)
+                  : page_index == 1
+                      ? diaryBody()
+                      : page_index == 2
+                          ? psychoBody()
+                          : page_index == 3
+                              ? medBody()
+                              : homeBody(size, _name))
+            ])
+          ],
+        ),
+        drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.white,
                 ),
-                bottomNavigationBar: BottomNavigationBar(
-                    type: BottomNavigationBarType.fixed,
-                    currentIndex: page_index,
-                    onTap: (int page) {
-                      setState(() {
-                        page_index = page;
-                      });
+                child: Stack(children:[Stack(
+                  children: [
+
+                    Positioned(child: Image.asset('images/talky.png'),top:0,right:0),
+
+                    Positioned(
+                        top:10,right:6,child:
+                    FutureBuilder<String>(
+                      future: _name,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        // ...
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          String data = snapshot.data ?? '';
+                          return Text('היי $data\n מה קורה?',textDirection: TextDirection.rtl,style: GoogleFonts.assistant(),);
+                        }
+                        return CircularProgressIndicator();
+                      },
+                    )),
+
+                  ],
+                ),
+                  Positioned(
+                      child:FutureBuilder<AvatarData>(
+                    future: _adata,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<AvatarData> snapshot) {
+                      // ...
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return AvatarStack(
+                            data: (snapshot.data ??
+                                AvatarData(body: AvatarData.body_default)));
+                      }
+                      return CircularProgressIndicator();
                     },
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.thumb_up_outlined),
-                        label: 'מפת דרכים',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.cloud_queue_rounded),
-                        label: 'יומן',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.face),
-                        label: 'פסיכוחינוך',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.accessibility_new_outlined),
-                        label: 'תרגילים',
-                      ),
-                    ]));
-          },
-        ));
+                  )),
+
+
+                ])),
+            ListTile(
+
+              title:  Text("עצב דמות",textDirection: TextDirection.rtl,style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Avatar(first: false, data: _adata)));
+              },
+            ),
+            ListTile(
+              title:  Text("מפה",textDirection: TextDirection.rtl,style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Money(to_give: 10, first: false)));
+              },
+            ),
+            ListTile(
+              title:  Text("התנתק",textDirection: TextDirection.rtl,style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => Login()));
+              },
+            ),
+          ]),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Color(0xb2ffffff),
+            currentIndex: page_index,
+            onTap: (int page) {
+              setState(() {
+                page_index = page;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+
+                icon: Container(
+                  width:50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (page_index!=0)?Color(0xff9e7fe0):Color(0xff35258a),
+                  ),
+                  child: Image.asset('images/thumbsup.png'),
+                ),
+                label: 'מפת דרכים',
+              ),
+              BottomNavigationBarItem(
+                icon:  Container(
+              width:50,
+              height: 50,
+              decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: (page_index!=1)?Color(0xff9e7fe0):Color(0xff35258a),
+              ),
+              child: Image.asset('images/cloud.png'),
+                ),
+                label: 'יומן',
+              ),
+              BottomNavigationBarItem(
+                icon:  Container(
+                  width:50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (page_index!=2)?Color(0xff9e7fe0):Color(0xff35258a),
+                  ),
+                  child: Image.asset('images/smiley.png'),
+                ),
+                label: 'פסיכוחינוך',
+              ),
+              BottomNavigationBarItem(
+                icon:  Container(
+                  width:50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (page_index!=3)?Color(0xff9e7fe0):Color(0xff35258a),
+                  ),
+                  child: Image.asset('images/human.png'),
+                ),
+                label: 'תרגילים',
+              ),
+            ]));
   }
 }
 
@@ -782,4 +1050,76 @@ class _PaintTask extends CustomPainter {
   bool shouldRepaint(_PaintTask oldDelegate) {
     return (slices != oldDelegate.slices) || (complete != oldDelegate.complete);
   }
+}
+
+Widget nameIt(Future<String> _name, color) {
+  return FutureBuilder<String>(
+    future: _name,
+    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+      // ...
+      if (snapshot.connectionState == ConnectionState.done) {
+        String data = snapshot.data ?? '';
+        print("datata:" + data);
+        return Text(
+          'היי $data,',
+          textDirection: TextDirection.rtl,
+          style: GoogleFonts.assistant(
+              fontSize: 24, fontWeight: FontWeight.w800, color: color),
+        );
+      }
+      return CircularProgressIndicator();
+    },
+  );
+}
+
+Widget build_money(String text) {
+  return Stack(children: [
+    Container(
+      width: 26,
+      height: 26,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          color: Colors.black,
+          width: 2,
+        ),
+        color: Color(0xb2ffffff),
+      ),
+    ),
+    Container(
+      width: 24,
+      height: 26,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          color: Colors.black,
+          width: 2,
+        ),
+        color: Color(0xb2ffffff),
+      ),
+    ),
+    Container(
+      width: 24,
+      height: 26,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          color: Colors.black,
+          width: 2,
+        ),
+        color: Color(0xb2ffffff),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            height: 0.65,
+            color: Colors.black,
+            fontSize: 14,
+          ),
+        ),
+      ),
+    ),
+  ]);
 }

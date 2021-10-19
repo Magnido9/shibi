@@ -1,5 +1,6 @@
 library expo;
 
+import 'package:application/screens/home/home.dart';
 import 'package:tuple/tuple.dart';
 
 import 'package:application/screens/Avatar/avatar.dart';
@@ -56,6 +57,7 @@ class FinalExpo extends StatelessWidget {
                 adata: adata,
                 theCase: this.theCase,
               ),
+          '/home': (context) => HomePage()
         },
       ),
     );
@@ -435,7 +437,7 @@ class _MainState extends State<_Main> {
   int choose = -1;
   @override
   Widget build(BuildContext context) {
-    print('main');
+    print('page3');
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -620,7 +622,7 @@ class _MainState extends State<_Main> {
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/main');
+                      Navigator.pushNamed(context, '/four');
                     },
                   )
                 ],
@@ -745,15 +747,40 @@ class _Page4 extends StatefulWidget {
   _Page4State createState() => _Page4State();
 }
 
-class _Page4State extends State<_Main> {
+class _Page4State extends State<_Page4> {
+  TextEditingController? _controller;
   double feeling=0;
   int choose = -1;
   @override
   Widget build(BuildContext context) {
-    print('main');
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    print('page4');
 
+    @override
+    void initState() {
+      _controller = TextEditingController(text: "");
+
+      super.initState();
+    }
+    Future<void> _add() async {
+
+      String? pid = AuthRepository.instance().user?.uid;
+      var v =
+      (await FirebaseFirestore.instance.collection("avatars").doc(pid).get());
+      int money=0;
+      if(v.data()==null){
+        money=0;}
+      else {
+        money = v['money'];
+      }
+      print(money);
+      money+=10;
+      await FirebaseFirestore.instance
+          .collection("avatars")
+          .doc(pid)
+          .set({'money':money}, SetOptions(merge: true));
+    }
     return Scaffold(body:
     Container(
       decoration: BoxDecoration(
@@ -777,15 +804,54 @@ class _Page4State extends State<_Main> {
                           size: MediaQuery.of(context).size);
                     }),
                 // color:Colors.green
-              )),
-          /*Positioned(
-              left: -0.8 * MediaQuery.of(context).size.width,
-              top: -1.25 * MediaQuery.of(context).size.height,
-              child: Container(
-                  width: 0.8125 * MediaQuery.of(context).size.height * 2,
-                  height: 0.8125 * MediaQuery.of(context).size.height * 1.8,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Color(0xffdee8f3)))),*/
+              )),Positioned(bottom:0,
+            child:Image.asset("images/Soldier3.png")
+          ),
+          /*Stack(children: [
+                      Align(
+                      alignment: FractionalOffset.bottomRight,
+                      child: Container(
+                        child: FittedBox(
+                          child: Image.asset('images/shibi_pages/money.png'),
+                          fit: BoxFit.fitHeight,
+                        ),
+                      ),
+                    ), Positioned(
+                        bottom: 0.5*0.65* MediaQuery.of(context).size.height,
+                        left: 0,
+                        right:0,
+                        top:0,
+                        child:Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+                      children:[  Text(
+                        "יאייייי!",
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.right,
+                        style: GoogleFonts.assistant(
+                          color: Colors.black,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w900,
+                        ),),Text(
+                        " זכית ב"+this.to_give.toString()+" מטבעות",
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.right,
+                        style: GoogleFonts.assistant(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                        ),),Text(
+                        "השתמשו בהם בחוכמה ;]",
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.right,
+                        style: GoogleFonts.assistant(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),)
+
+
+
+                ]))],)*/
           Align(
             alignment: Alignment.topRight,
             child: Container(
@@ -839,7 +905,7 @@ class _Page4State extends State<_Main> {
                   Container(
                       margin: EdgeInsets.fromLTRB(20,20,20,0),
                       child: Text(
-                        "מדהימים!\nדרגו את החרדה שלכם בשיא החשיפה",
+                        "שתפו, איך הרגשתם?",
                         textAlign: TextAlign.right,
                         textDirection: TextDirection.rtl,
                         style: GoogleFonts.assistant(
@@ -849,52 +915,203 @@ class _Page4State extends State<_Main> {
                         ),
                       ))
                 ],
-              ),Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                      margin: EdgeInsets.fromLTRB(20,10,20,20),
-                      child: Text(
-                        "דרגו יחידות מצוקה ברגע הכי קשה ומאתגר\n במהלך החשיפה.",
-                        textAlign: TextAlign.right,
-                        textDirection: TextDirection.rtl,
-                        style: GoogleFonts.assistant(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ))
-                ],
               ),
               Container(
-                margin:
-                EdgeInsets.only(left: 40, right: 40, top: 30, bottom: 0),
-                child: SfSliderTheme(
-                  data: SfSliderThemeData(
-                    activeTrackHeight: 20,
-                    inactiveTrackHeight: 20,
-                    thumbColor: Color(0xffefb3e2),
-                    inactiveTrackColor: Color(0xffececec),
-                    activeTrackColor: Color(0xffececec),
-                    thumbRadius: 20,
-                    activeDividerRadius: 0,
-                    activeDividerStrokeWidth: 0,
-                    thumbStrokeWidth: 0,
-                  ),
-                  child: SfSlider(
-
-                    value: feeling.round(),
-                    min: 0,
-                    max: 100,
-                    showLabels: true,
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        feeling = value;
-                      });
-                    },
-                  ),
+                height: 25),Container(
+                width: 370,
+                height: 252,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(31),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x3f000000),
+                      blurRadius: 7,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                  color: Color(0xffe0dfd9),
                 ),
-              ),
+                child: Stack(children: [Column(children: [
+                  Container(height: 42),
+                  Container(
+                    width: 360,
+                    height: 2,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Color(0x2d34248a),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  Container(height: 42),
+                  Container(
+                    width: 360,
+                    height: 2,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Color(0x2d34248a),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  Container(height: 42),
+                  Container(
+                    width: 360,
+                    height: 2,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Color(0x2d34248a),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  Container(height: 42),
+                  Container(
+                    width: 360,
+                    height: 2,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Color(0x2d34248a),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  Container(height: 42),
+                  Container(
+                    width: 360,
+                    height: 2,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Color(0x2d34248a),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+
+                ],),
+                  Positioned(
+                      top: -10,
+                      right: 0,
+                      left: 0,
+                      child: TextFormField(
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          height: 2.25,
+                          fontFamily: "Assistant",
+                          fontWeight: FontWeight.w300,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: '...',
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                        ),
+                        textDirection: TextDirection.rtl,
+                        controller: _controller,
+                        maxLines: 5,
+                      )),
+                  Positioned(
+                      top: 193,
+                      left: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: Color(0xff35258a),
+                              shape: CircleBorder(),
+                              fixedSize: Size(55, 55),
+                            ),
+                            child: Icon(
+                              Icons.arrow_back,
+                              size: 40,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => BackdropFilter(
+                                  filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                  child: AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(36)),
+                                    backgroundColor: Color(0xffECECEC),
+                                    content: Container(
+                                      height:height*0.6,
+                                      width:width*0.8,
+
+                                      child:Stack(children: [
+                                      Positioned(
+                                        bottom:-30,
+                                        right:-20,
+                                        child: Container(
+                                          child: FittedBox(
+                                            child: Image.asset('images/Soldier4.png'),
+                                            fit: BoxFit.fitHeight,
+                                          ),
+                                        ),
+                                      ), Positioned(
+                                          bottom: 0.5*0.65* MediaQuery.of(context).size.height,
+                                          left: 0,
+                                          right:0,
+                                          top:0,
+                                          child:Column(
+
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+                                              children:[
+
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                      builder: (BuildContext context) =>
+                                                          Home())),
+                                                  child: const Text(
+                                                    'x',
+                                                    style: TextStyle(fontSize: 20),
+                                                  ),
+                                                ),Text(
+                                                "יאייייי!",
+                                                textDirection: TextDirection.rtl,
+                                                textAlign: TextAlign.right,
+                                                style: GoogleFonts.assistant(
+                                                  color: Colors.black,
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.w900,
+                                                ),),Text(
+                                                " זכית ב 10"+" מטבעות",
+                                                textDirection: TextDirection.rtl,
+                                                textAlign: TextAlign.right,
+                                                style: GoogleFonts.assistant(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w900,
+                                                ),),Text(
+                                                "השתמשו בהם בחוכמה ;]",
+                                                textDirection: TextDirection.rtl,
+                                                textAlign: TextAlign.right,
+                                                style: GoogleFonts.assistant(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                ),)
+
+
+
+                                              ]))],),)
+
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        ],
+                      )),
+              ]),
+
               /*Container(
                 child: Text
                   (
@@ -909,37 +1126,8 @@ class _Page4State extends State<_Main> {
                 ),
 
               ),*/
-              Container(
-                height: 20,
-              ),
-            ],
+              )],
           ),
-          Positioned(
-              bottom: 0,
-              child: Center(child: Image.asset('images/Soldier3.png'))),
-          Positioned(
-              top: height * 0.92,
-              right: width * 0.8,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Color(0xff35258a),
-                      shape: CircleBorder(),
-                      fixedSize: Size(55, 55),
-                    ),
-                    child: Icon(
-                      Icons.arrow_back,
-                      size: 40,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/four');
-                    },
-                  )
-                ],
-              )),
 
         ],
       ),
