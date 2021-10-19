@@ -144,6 +144,9 @@ flutter:
     - images/needle.png
     - images/boom1.png
     - images/boom2.png
+    - images/Soldier1.png
+    - images/Soldier2.png
+    - images/Soldier3.png
 
 
     - music/meditation.mp3

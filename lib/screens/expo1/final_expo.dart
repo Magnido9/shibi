@@ -1,4 +1,5 @@
 library expo;
+
 import 'package:tuple/tuple.dart';
 
 import 'package:application/screens/Avatar/avatar.dart';
@@ -26,7 +27,15 @@ class FinalExpo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (context,) => ExpoData(adata: adata, theCase: theCase, body_task: 0, feelings_task: 0, thoughts_task: 0),
+      create: (
+        context,
+      ) =>
+          ExpoData(
+              adata: adata,
+              theCase: theCase,
+              body_task: 0,
+              feelings_task: 0,
+              thoughts_task: 0),
       child: MaterialApp(
         title: 'חשיפה 1',
         // Start the app with the "/" named route. In this case, the app starts
@@ -41,8 +50,11 @@ class FinalExpo extends StatelessWidget {
           '/thoughts/1': (context) => thought1_1(),
           '/thoughts/2': (context) => thought2_1(),
           '/feelings/1': (context) => feeling1_1(),
-          '/body/1' : (context) => body1_1() ,
-          '/tools' : (context) => tools(adata: adata,theCase: this.theCase,) ,
+          '/body/1': (context) => body1_1(),
+          '/tools': (context) => tools(
+                adata: adata,
+                theCase: this.theCase,
+              ),
         },
       ),
     );
@@ -59,22 +71,31 @@ class _Page1State extends State<_Page1> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    //C8F6B1
     return Scaffold(
-      body: Stack(
+        body: Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0x79F13D), Colors.white])),
+      child: Stack(
         children: [
-          Positioned(top:-150,child:
-          Container(
-            child: TweenAnimationBuilder<double>(
-                tween: Tween<double>(begin: 0, end: 0.7),
-                duration: Duration(seconds: 1),
-                builder:
-                    (BuildContext context, double percent, Widget? child) {
-                  return CustomPaint(
-                      painter: _LoadBar(percent: 0, size: MediaQuery.of(context).size),
-                      size: MediaQuery.of(context).size);
-                }),
-            // color:Colors.green
-          )),
+          Positioned(
+              top: -150,
+              child: Container(
+                child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: 0.7),
+                    duration: Duration(seconds: 1),
+                    builder:
+                        (BuildContext context, double percent, Widget? child) {
+                      return CustomPaint(
+                          painter: _LoadBar(
+                              percent: 0, size: MediaQuery.of(context).size),
+                          size: MediaQuery.of(context).size);
+                    }),
+                // color:Colors.green
+              )),
           /*Positioned(
               left: -0.8 * MediaQuery.of(context).size.width,
               top: -1.25 * MediaQuery.of(context).size.height,
@@ -96,9 +117,6 @@ class _Page1State extends State<_Page1> {
               margin: EdgeInsets.all(30),
             ),
           ),
-
-
-
           Column(
             children: [
               Container(
@@ -111,27 +129,27 @@ class _Page1State extends State<_Page1> {
                     color: Colors.transparent,
                     onPressed: () {},
                     child: new IconTheme(
-                      data: new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
+                      data:
+                          new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
                       child: new Icon(Icons.menu),
                     ),
                   ),
                   Align(
                     alignment: Alignment.topLeft,
-                  child: Text(
-                    "   ביצוע החשיפה",
-                    //textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontFamily: "Assistant",
-                      fontWeight: FontWeight.w700,
+                    child: Text(
+                      "        ביצוע החשיפה",
+                      //textAlign: TextAlign.center,
+                      style: GoogleFonts.assistant(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),),
-
+                  ),
                 ],
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.15,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -150,26 +168,22 @@ class _Page1State extends State<_Page1> {
                       ))
                 ],
               ),
-              Container(
-                padding: EdgeInsets.all(30),
-                width: width * 0.9,
-                height: height * 0.3,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color(0xccebebeb),
-                ),
-                child: SingleChildScrollView(
-                  child: Text(
-                    Provider.of<ExpoData>(context, listen: false).theCase,
-                    textAlign: TextAlign.right,
-                    textDirection: TextDirection.rtl,
-                    style: GoogleFonts.assistant(
-                      color: Color(0xff6f6ca7),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                      margin: EdgeInsets.all(20),
+                      child: Text(
+                        "חשוב מאוד להסתער על החשיפה ולא לגשת\nאליה בכניעה, או פחד. לכן, זקפי את הגוף, כווצי\nוהרפי את השרירים, קחו נשימה עמוקה וזכרו-\nזה לא צריך להיות מושלם, \nכל התנסות נחשבת. \n",
+                        textAlign: TextAlign.right,
+                        textDirection: TextDirection.rtl,
+                        style: GoogleFonts.assistant(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ))
+                ],
               ),
               Container(
                   margin: EdgeInsets.all(40),
@@ -191,7 +205,7 @@ class _Page1State extends State<_Page1> {
                                 top: 5,
                                 right: 25,
                                 child: Text(
-                                  "בואו נתחיל!",
+                                  "יוצאים לדרך!",
                                   textDirection: TextDirection.rtl,
                                   textAlign: TextAlign.left,
                                   style: GoogleFonts.assistant(
@@ -214,10 +228,13 @@ class _Page1State extends State<_Page1> {
                             ))),
                   ]))
             ],
-          )
+          ),
+          Positioned(
+              bottom: 0,
+              child: Center(child: Image.asset('images/Soldier1.png')))
         ],
       ),
-    );
+    ));
   }
 }
 
@@ -234,21 +251,37 @@ class _Page2State extends State<_Page2> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Stack(
-        children: [  Positioned(top:-150,child:
-        Container(
-          child: TweenAnimationBuilder<double>(
-              tween: Tween<double>(begin: 0, end: 0.7),
-              duration: Duration(seconds: 1),
-              builder:
-                  (BuildContext context, double percent, Widget? child) {
-                return CustomPaint(
-                    painter: _LoadBar(percent: 0, size: MediaQuery.of(context).size),
-                    size: MediaQuery.of(context).size);
-              }),
-          // color:Colors.green
-        )),
-
+        body: Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0x79F13D), Colors.white])),
+      child: Stack(
+        children: [
+          Positioned(
+              top: -150,
+              child: Container(
+                child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: 0.7),
+                    duration: Duration(seconds: 1),
+                    builder:
+                        (BuildContext context, double percent, Widget? child) {
+                      return CustomPaint(
+                          painter: _LoadBar(
+                              percent: 0, size: MediaQuery.of(context).size),
+                          size: MediaQuery.of(context).size);
+                    }),
+                // color:Colors.green
+              )),
+          /*Positioned(
+              left: -0.8 * MediaQuery.of(context).size.width,
+              top: -1.25 * MediaQuery.of(context).size.height,
+              child: Container(
+                  width: 0.8125 * MediaQuery.of(context).size.height * 2,
+                  height: 0.8125 * MediaQuery.of(context).size.height * 1.8,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Color(0xffdee8f3)))),*/
           Align(
             alignment: Alignment.topRight,
             child: Container(
@@ -256,42 +289,41 @@ class _Page2State extends State<_Page2> {
                 elevation: 0,
                 disabledElevation: 0,
                 backgroundColor: Colors.grey.shade400,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () {},
                 child: Icon(Icons.arrow_forward),
               ),
               margin: EdgeInsets.all(30),
             ),
           ),
-
           Column(
             children: [
               Container(
                 height: 40,
               ),
               Row(
+                //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FlatButton(
                     color: Colors.transparent,
                     onPressed: () {},
                     child: new IconTheme(
-                      data: new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
+                      data:
+                          new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
                       child: new Icon(Icons.menu),
                     ),
                   ),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "           דיווח ראשון",
+                      "        ביצוע החשיפה",
                       //textAlign: TextAlign.center,
                       style: GoogleFonts.assistant(
                         color: Colors.black,
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
                       ),
-                    ),),
-
+                    ),
+                  ),
                 ],
               ),
               Container(
@@ -299,132 +331,225 @@ class _Page2State extends State<_Page2> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    child: Container(
-                      child: Center(
-                        child: Text(
-                          '?',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                      ),
-                      width: 26,
-                      height: 26,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xffc4c4c4),
-                      ),
-                    ),
-                    onTap: () =>
-                        showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                            child:
-                          AlertDialog(
-                            backgroundColor: Color(0xffECECEC),
-                        content: RichText(
-                          textDirection: TextDirection.rtl,
-                          text: TextSpan(
-                            style: GoogleFonts.assistant(
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
-                            children: <TextSpan>[
-                              //
-                              TextSpan(
-                                  text:
-                                      'עלייך לדרג מ-0 עד 100 יחידות מצוקה.\n'),
-                              TextSpan(
-                                  text: '0 - ',
-                                  style: GoogleFonts.assistant(
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xff35258A))),
-                              TextSpan(text: 'המצב לא מעורר חרדה.\n'),
-                              TextSpan(
-                                  text: '50 - ',
-                                  style: GoogleFonts.assistant(
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xff35258A))),
-                              TextSpan(
-                                  text:
-                                      'מצב מעורר חרדה אך, במאמץ את מרגישה שתוכלי להתמודד איתו.\n'),
-                              TextSpan(
-                                  text: '100 - ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xff35258A))),
-                              TextSpan(
-                                  text:
-                                      'המצב שבו את מדמיינת שתחווי את החרדה הגרועה ביותר שתחויי בחייך.\n'),
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'Cancel'),
-                            child: const Text(
-                              'x',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ],
-                      ),),
-                    ),
-                  ),
                   Container(
-                    margin: EdgeInsets.only(right: 20, left: 20, bottom: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "עד כמה את מרגישה לחץ או חרדה?",
-                          textDirection: TextDirection.rtl,
-                          textAlign: TextAlign.right,
+                      margin: EdgeInsets.all(20),
+                      child: Text(
+                        "זמן לבצע את החשיפה -",
+                        textAlign: TextAlign.right,
+                        textDirection: TextDirection.rtl,
+                        style: GoogleFonts.assistant(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ))
+                ],
+              ),
+              Container(
+                  height: 400,
+                  child: Stack(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(30),
+                        width: width * 0.9,
+                        height: height * 0.3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Color(0xccebebeb),
+                        ),
+                        child: SingleChildScrollView(
+                          child: Text(
+                            Provider.of<ExpoData>(context, listen: false)
+                                .theCase,
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.rtl,
+                            style: GoogleFonts.assistant(
+                              color: Color(0xff6f6ca7),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: height * 0.19,
+                        left: width * 0.05,
+                        child: Container(
+                            margin: EdgeInsets.all(40),
+                            child: Stack(children: [
+                              Container(
+                                  width: 100,
+                                  height: 100,
+                                  child: MaterialButton(
+                                      disabledElevation: 0,
+                                      elevation: 0,
+                                      onPressed: () {
+                                        Navigator.pushNamed(context, '/main');
+                                      },
+                                      minWidth: 100,
+                                      height: 100,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100)),
+                                      color: Color(0xff35258a),
+                                      child: Stack(children: <Widget>[
+                                        Positioned(
+                                          top: 35,
+                                          right: 0,
+                                          child: Text(
+                                            "ביצעתי!",
+                                            textDirection: TextDirection.rtl,
+                                            textAlign: TextAlign.left,
+                                            style: GoogleFonts.assistant(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        )
+                                      ]))),
+                            ])),
+                      )
+                    ],
+                  ))
+            ],
+          ),
+          Positioned(
+              bottom: 0,
+              child: Center(child: Image.asset('images/Soldier2.png')))
+        ],
+      ),
+    ));
+  }
+}
+
+class _Main extends StatefulWidget {
+  @override
+  _MainState createState() => _MainState();
+}
+
+class _MainState extends State<_Main> {
+  double feeling=0;
+  int choose = -1;
+  @override
+  Widget build(BuildContext context) {
+    print('main');
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return Scaffold(body:
+        Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0x79F13D), Colors.white])),
+          child: Stack(
+            children: [
+              Positioned(
+                  top: -150,
+                  child: Container(
+                    child: TweenAnimationBuilder<double>(
+                        tween: Tween<double>(begin: 0, end: 0.7),
+                        duration: Duration(seconds: 1),
+                        builder:
+                            (BuildContext context, double percent, Widget? child) {
+                          return CustomPaint(
+                              painter: _LoadBar(
+                                  percent: 0, size: MediaQuery.of(context).size),
+                              size: MediaQuery.of(context).size);
+                        }),
+                    // color:Colors.green
+                  )),
+              /*Positioned(
+              left: -0.8 * MediaQuery.of(context).size.width,
+              top: -1.25 * MediaQuery.of(context).size.height,
+              child: Container(
+                  width: 0.8125 * MediaQuery.of(context).size.height * 2,
+                  height: 0.8125 * MediaQuery.of(context).size.height * 1.8,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Color(0xffdee8f3)))),*/
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  child: FloatingActionButton(
+                    elevation: 0,
+                    disabledElevation: 0,
+                    backgroundColor: Colors.grey.shade400,
+                    onPressed: () {},
+                    child: Icon(Icons.arrow_forward),
+                  ),
+                  margin: EdgeInsets.all(30),
+                ),
+              ),
+              Column(
+                children: [
+                  Container(
+                    height: 40,
+                  ),
+                  Row(
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton(
+                        color: Colors.transparent,
+                        onPressed: () {},
+                        child: new IconTheme(
+                          data:
+                          new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
+                          child: new Icon(Icons.menu),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "            דיווח שיא",
+                          //textAlign: TextAlign.center,
                           style: GoogleFonts.assistant(
                             color: Colors.black,
-                            fontSize: 20,
+                            fontSize: 24,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Container(
-                          height: 5,
-                        ),
-                        Text(
-                          "דרגי את המשימה בהתאם",
-                          textAlign: TextAlign.right,
-                          style: GoogleFonts.assistant(
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),Container(
-                height:50),
-              Consumer<ExpoData>(
-                builder: (context, data, x) {
-                  AvatarData x = data.adata.clone();
-                  if (feeling > 50)
-                    x.hands = 'images/handsclosed.png';
-                  else
-                    x.hands = 'images/handsopen.png';
-                  // if(feeling<50 ) x= x.clone()..hands='images/handsdown.png';
-
-                  return Container(
-                    height:210,
-                    width:210,child:Flexible(
-                    flex: 1,
-                    child:AvatarStack(data: x),
-          fit: FlexFit.tight,
-                    // child: AvatarStack(data: AvatarData()),
-                  ));
-                },
-              ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                          margin: EdgeInsets.fromLTRB(20,20,20,0),
+                          child: Text(
+                            "מדהימים!\nדרגו את החרדה שלכם בשיא החשיפה",
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.rtl,
+                            style: GoogleFonts.assistant(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ))
+                    ],
+                  ),Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                          margin: EdgeInsets.fromLTRB(20,10,20,20),
+                          child: Text(
+                            "דרגו יחידות מצוקה ברגע הכי קשה ומאתגר\n במהלך החשיפה.",
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.rtl,
+                            style: GoogleFonts.assistant(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ))
+                    ],
+                  ),
               Container(
                 margin:
                     EdgeInsets.only(left: 40, right: 40, top: 30, bottom: 0),
@@ -435,23 +560,13 @@ class _Page2State extends State<_Page2> {
                     thumbColor: Color(0xffefb3e2),
                     inactiveTrackColor: Color(0xffececec),
                     activeTrackColor: Color(0xffececec),
-                      thumbRadius: 20,
+                    thumbRadius: 20,
                     activeDividerRadius: 0,
                     activeDividerStrokeWidth: 0,
                     thumbStrokeWidth: 0,
-
                   ),
                   child: SfSlider(
 
-                    thumbIcon: Center(child:Text(
-                        '${feeling.round()}',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.assistant(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
                     value: feeling.round(),
                     min: 0,
                     max: 100,
@@ -462,8 +577,6 @@ class _Page2State extends State<_Page2> {
                       });
                     },
                   ),
-
-
                 ),
               ),
               /*Container(
@@ -484,378 +597,37 @@ class _Page2State extends State<_Page2> {
                 height: 20,
               ),
             ],
-          ),    Positioned(
-              top: height*0.92,
-              right: width*0.8,
-
-              child:
-              Row(
+          ),
+              Positioned(
+                  bottom: 0,
+                  child: Center(child: Image.asset('images/Soldier3.png'))),
+          Positioned(
+              top: height * 0.92,
+              right: width * 0.8,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TextButton(
                     style: TextButton.styleFrom(
                       backgroundColor: Color(0xff35258a),
                       shape: CircleBorder(),
-                      fixedSize: Size(
-                          55,
-                          55
-                      ),
+                      fixedSize: Size(55, 55),
                     ),
                     child: Icon(
                       Icons.arrow_back,
                       size: 40,
                       color: Colors.white,
                     ),
-                    onPressed:   ()   {Navigator.pushNamed(context, '/main');}
-                    ,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/main');
+                    },
                   )
                 ],
-              )
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Main extends StatefulWidget {
-  @override
-  _MainState createState() => _MainState();
-}
-
-class _MainState extends State<_Main> {
-  int choose = -1;
-  @override
-  Widget build(BuildContext context) {
-    print('main');
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-        body: Stack(  children: [  Positioned(top:-150,child:
-        Container(
-          child: TweenAnimationBuilder<double>(
-              tween: Tween<double>(begin: 0, end: 0.7),
-              duration: Duration(seconds: 1),
-              builder:
-                  (BuildContext context, double percent, Widget? child) {
-                return CustomPaint(
-                    painter: _LoadBar(percent: 0, size: MediaQuery.of(context).size),
-                    size: MediaQuery.of(context).size);
-              }),
-          // color:Colors.green
-        )),
-
-      Align(
-        alignment: Alignment.topRight,
-        child: Container(
-          child: FloatingActionButton(
-            elevation: 0,
-            disabledElevation: 0,
-            backgroundColor: Colors.grey.shade400,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_forward),
-          ),
-          margin: EdgeInsets.all(30),
-        ),
-      ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Color(0xff35258a),
-                      shape: CircleBorder(),
-                    ),
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed( context,'/tools');
-                    },
-                  ),
-                  margin: EdgeInsets.all(8),
-                ),
-              ],
-            ),
-          ),
-
-      Column(
-        children: [
-          Container(
-            height: 40,
-          ),
-          Row(
-            children: [
-              FlatButton(
-                color: Colors.transparent,
-                onPressed: () {},
-                child: new IconTheme(
-                  data: new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
-                  child: new Icon(Icons.menu),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "                  זיהוי",
-                  //textAlign: TextAlign.center,
-                  style: GoogleFonts.assistant(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),),
-
-            ],
-          ),//1
-          Container(
-            height: MediaQuery.of(context).size.height * 0.15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                child: Container(
-                  child: Center(
-                    child: Text(
-                      '?',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                  width: 26,
-                  height: 26,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,//3
-                    color: Color(0xffc4c4c4),
-                  ),
-                ),
-                onTap: () => showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                        child:
-                        AlertDialog(
-                          backgroundColor: Color(0xffECECEC),
-                          content: RichText(
-                            textDirection: TextDirection.rtl,
-                            text: TextSpan(
-                              style: GoogleFonts.assistant(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                              children: <TextSpan>[
-                                //
-                                TextSpan(
-                                    text:
-                                    'עוד לא הוכנס מלל.\n'),
-
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text(
-                                'x',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
-                          ],
-                        ),),
-                ),
-              ),
-              Container(
-                width:80
-              ),
-              Container(
-                margin: EdgeInsets.only(right: 20, left: 20, bottom: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "בואי נזהה יחד את החרדה",
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.right,
-                      style: GoogleFonts.assistant(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Container(
-                      height: 5,
-                    ),
-                    Text(
-                      "בחרי עם איזה זיהוי להתחיל",
-                      textAlign: TextAlign.right,
-                      style: GoogleFonts.assistant(
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                  width:20
-              ),
-            ],
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          TweenAnimationBuilder<double>(
-              tween: Tween<double>(
-                  begin: (choose == -1) ? 0.5 : 0.8,
-                  end: (choose == -1) ? 0.8 : 0.5),
-              duration: Duration(milliseconds: 500),
-              builder: (BuildContext context, double percent, Widget? child) {
-                return Container(
-                  width: (choose == -1) ? width : width * percent,
-                  child: Consumer<ExpoData>(
-                    builder: (context, data, w) {
-                      print(data.done);
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _MyButton(
-                              isDone: data.done[0],
-                              isSelected: (choose == 0),
-                              name: 'גוף',
-                              func: () {
-                                setState(() {
-                                  choose = 0;
-                                });
-                              },
-                              image: 'images/expo/meditate.png'),
-                          _MyButton(
-                              isDone: data.done[1],
-                              isSelected: (choose == 1),
-                              name: 'רגשות',
-                              func: () {
-                                setState(() {
-                                  choose = 1;
-                                });
-                              },
-                              image: 'images/expo/smile.png'),
-                          _MyButton(
-                              isDone: data.done[2],
-                              isSelected: (choose == 2),
-                              name: 'מחשבות',
-                              func: () {
-                                setState(() {
-                                  choose = 2;
-                                });
-                              },
-                              image: 'images/expo/brain.png'),
-                        ],
-                      );
-                    },
-                  ),
-                );
-              }),
-          if (choose != -1)
-            Flexible(
-              child: Container(
-                  margin: EdgeInsets.only(top: 10),
-                  width: width * 0.9,
-                  height: 247,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0x3f000000),
-                        blurRadius: 10,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                    color: _color(),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Text(
-                          _title(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontFamily: "Assistant",
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        margin: EdgeInsets.all(30),
-                      ),
-                      Container(
-                        child: Text(
-                          _text(),
-                          textAlign: TextAlign.right,
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
-                        ),
-                        margin: EdgeInsets.only(left: 30, right: 30),
-                      ),
-                    ],
-                  )),
-            ),
+              )),
 
         ],
       ),
-    Positioned(
-      top: height*0.92,
-      right: width*0.8,
-
-      child:
-    (choose != -1)?
-      Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: Color(0xff35258a),
-            shape: CircleBorder(),
-            fixedSize: Size(
-             55,
-              55
-            ),
-          ),
-          child: Icon(
-            Icons.arrow_back,
-            size: 40,
-            color: Colors.white,
-          ),
-          onPressed: () async {
-            if (choose == 2) {
-              await Navigator.pushNamed(context, '/thoughts/1');
-            } else if (choose == 0) {
-              await Navigator.pushNamed(context, '/body/1');
-            } else if (choose == 1) {
-              await Navigator.pushNamed(context, '/feelings/1');
-            }
-            setState(() {
-              choose = -1;
-            });
-          },
-        )
-      ],
-    ):Container()
-    ),
-        ])
-
-    );
+    ));
   }
 
   String _title() {
@@ -868,17 +640,17 @@ class _MainState extends State<_Main> {
 
   String _text() {
     var x = Provider.of<ExpoData>(context, listen: false).introductions;
-    if (choose == 0) return  x[0].item2;
+    if (choose == 0) return x[0].item2;
     if (choose == 1) return x[1].item2;
-    if (choose == 2) return  x[2].item2;
+    if (choose == 2) return x[2].item2;
     return '';
   }
 
   Color _color() {
     var x = Provider.of<ExpoData>(context, listen: false).colors;
-    if (choose == 0) return  x[1];
+    if (choose == 0) return x[1];
     if (choose == 1) return x[2];
-    if (choose == 2) return  x[0];
+    if (choose == 2) return x[0];
     return Color(0xffefd6ee);
   }
 }
@@ -967,26 +739,35 @@ class _MyButton extends StatelessWidget {
 }
 
 class ExpoData {
-  ExpoData({required this.adata, required this.theCase,required this.body_task,required this.feelings_task,required this.thoughts_task}) {
-
+  ExpoData(
+      {required this.adata,
+      required this.theCase,
+      required this.body_task,
+      required this.feelings_task,
+      required this.thoughts_task}) {
     while (feelings.length % 8 != 0) {
       feelings.add('');
     }
 
-    introductions=[all_introductions[0][body_task],all_introductions[1][feelings_task], all_introductions[2][thoughts_task]];
+    introductions = [
+      all_introductions[0][body_task],
+      all_introductions[1][feelings_task],
+      all_introductions[2][thoughts_task]
+    ];
   }
   int body_task, feelings_task, thoughts_task;
   String theCase;
-  List<Color> colors=[
+  List<Color> colors = [
     Color(0xfff3f1de),
     Color(0xffdef3df),
     Color(0xffefd6ee)
   ];
-  List<List<Tuple2<String,String>>> all_introductions=[
-    [Tuple2('זיהוי גוף','חשוב שנלמד לזהות כיצד הגוף משפיע על החרדה שלנו.'  )],
-    [Tuple2('זיהוי רגשות',  'הרגש הוא חלק מהותי מן החרדה שלנו......')],
-    [Tuple2( 'זיהוי מחשבות',  'המחשבות הם מחל מהמחשבה, וחשוב שנאתרן...')]];
-  List<Tuple2<String,String>> introductions=[];
+  List<List<Tuple2<String, String>>> all_introductions = [
+    [Tuple2('זיהוי גוף', 'חשוב שנלמד לזהות כיצד הגוף משפיע על החרדה שלנו.')],
+    [Tuple2('זיהוי רגשות', 'הרגש הוא חלק מהותי מן החרדה שלנו......')],
+    [Tuple2('זיהוי מחשבות', 'המחשבות הם מחל מהמחשבה, וחשוב שנאתרן...')]
+  ];
+  List<Tuple2<String, String>> introductions = [];
 
   List<bool> done = [false, false, false];
   int stress = 50;
@@ -1045,7 +826,7 @@ class ExpoData {
   ];
   List<int> felt = [];
 
-  List<String> painSpots=[];
+  List<String> painSpots = [];
   AvatarData adata;
 }
 
@@ -1064,10 +845,20 @@ class _LoadBar extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 8;
     Offset center = Offset(size.width / 2, -size.width * 0.3);
-    canvas.drawCircle(center, size.width*1.05,painter..color = Color(0xffdee8f3)
-      ..style = PaintingStyle.fill );
-    canvas.drawArc(Rect.fromCircle(center: center, radius: size.width*1.05), 0, pi,
-        false, painter..color = Color(0xffc4c4c4)..style = PaintingStyle.stroke);
+    canvas.drawCircle(
+        center,
+        size.width * 1.05,
+        painter
+          ..color = Color(0xE5F3DE)
+          ..style = PaintingStyle.fill);
+    canvas.drawArc(
+        Rect.fromCircle(center: center, radius: size.width * 1.05),
+        0,
+        pi,
+        false,
+        painter
+          ..color = Color(0xffc4c4c4)
+          ..style = PaintingStyle.stroke);
     double pad = 0.2;
 
     Offset off1 = center +
@@ -1076,7 +867,7 @@ class _LoadBar extends CustomPainter {
       ..color = Colors.grey
       ..style = PaintingStyle.fill
       ..strokeWidth = 2;
-    Offset off2 = center +//
+    Offset off2 = center + //
         Offset(sin(pi / 6 - pad) * size.width, cos(pi / 6 - pad) * size.width);
     painter
       ..color = Colors.grey
@@ -1089,6 +880,7 @@ class _LoadBar extends CustomPainter {
     return percent != oldDelegate.percent;
   }
 }
+
 class _PaintTask extends CustomPainter {
   final int slices, complete;
 
@@ -1099,7 +891,7 @@ class _PaintTask extends CustomPainter {
     double sw = 7;
     var painter = Paint()
       ..color = Color(0xFFC4C4C4)
-    // ..color = Colors.black
+      // ..color = Colors.black
       ..style = PaintingStyle.stroke
       ..strokeWidth = sw;
     Offset c = Offset(size.height / 2, size.width / 2);
