@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:application/screens/Avatar/give_money.dart';
 import 'package:application/screens/home/personal_diary.dart';
 import 'package:application/screens/home/psycho.dart';
+import 'package:application/screens/home/stars.dart';
 import 'package:application/screens/map/map.dart';
 import 'package:application/screens/map/meditation.dart';
 import 'package:flutter/cupertino.dart';
@@ -316,7 +317,7 @@ class _HomeState extends State<Home> {
             Positioned(
               right: 20,
               top: height * 0.25,
-              child: Container(
+              child: GestureDetector(child:Container(
                   height: 200,
                   width: 200,
                   child: Stack(
@@ -348,6 +349,12 @@ class _HomeState extends State<Home> {
                           top: 70),
                     ],
                   )),
+              onTap:() {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Stars(cur_star:3)));
+              },
+              ),
             ),
             Positioned(
                 left: 70,
@@ -758,30 +765,37 @@ class _HomeState extends State<Home> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
-                child: Stack(children:[Stack(
-                  children: [
-
-                    Positioned(child: Image.asset('images/talky.png'),top:0,right:0),
-
-                    Positioned(
-                        top:10,right:6,child:
-                    FutureBuilder<String>(
-                      future: _name,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<String> snapshot) {
-                        // ...
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          String data = snapshot.data ?? '';
-                          return Text('היי $data\n מה קורה?',textDirection: TextDirection.rtl,style: GoogleFonts.assistant(),);
-                        }
-                        return CircularProgressIndicator();
-                      },
-                    )),
-
-                  ],
-                ),
+                child: Stack(children: [
+                  Stack(
+                    children: [
+                      Positioned(
+                          child: Image.asset('images/talky.png'),
+                          top: 0,
+                          right: 0),
+                      Positioned(
+                          top: 10,
+                          right: 6,
+                          child: FutureBuilder<String>(
+                            future: _name,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              // ...
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                String data = snapshot.data ?? '';
+                                return Text(
+                                  'היי $data\n מה קורה?',
+                                  textDirection: TextDirection.rtl,
+                                  style: GoogleFonts.assistant(),
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          )),
+                    ],
+                  ),
                   Positioned(
-                      child:FutureBuilder<AvatarData>(
+                      child: FutureBuilder<AvatarData>(
                     future: _adata,
                     builder: (BuildContext context,
                         AsyncSnapshot<AvatarData> snapshot) {
@@ -794,12 +808,11 @@ class _HomeState extends State<Home> {
                       return CircularProgressIndicator();
                     },
                   )),
-
-
                 ])),
             ListTile(
-
-              title:  Text("עצב דמות",textDirection: TextDirection.rtl,style: GoogleFonts.assistant()),
+              title: Text("עצב דמות",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
               onTap: () {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (BuildContext context) =>
@@ -807,7 +820,9 @@ class _HomeState extends State<Home> {
               },
             ),
             ListTile(
-              title:  Text("מפה",textDirection: TextDirection.rtl,style: GoogleFonts.assistant()),
+              title: Text("מפה",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
               onTap: () {
                 Future<void> _signOut() async {
                   await FirebaseAuth.instance.signOut();
@@ -819,7 +834,9 @@ class _HomeState extends State<Home> {
               },
             ),
             ListTile(
-              title:  Text("התנתק",textDirection: TextDirection.rtl,style: GoogleFonts.assistant()),
+              title: Text("התנתק",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
               onTap: () {
                 Future<void> _signOut() async {
                   await FirebaseAuth.instance.signOut();
@@ -842,49 +859,56 @@ class _HomeState extends State<Home> {
             },
             items: [
               BottomNavigationBarItem(
-
                 icon: Container(
-                  width:50,
+                  width: 50,
                   height: 50,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: (page_index!=0)?Color(0xff9e7fe0):Color(0xff35258a),
+                    color: (page_index != 0)
+                        ? Color(0xff9e7fe0)
+                        : Color(0xff35258a),
                   ),
                   child: Image.asset('images/thumbsup.png'),
                 ),
                 label: 'מפת דרכים',
               ),
               BottomNavigationBarItem(
-                icon:  Container(
-              width:50,
-              height: 50,
-              decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: (page_index!=1)?Color(0xff9e7fe0):Color(0xff35258a),
-              ),
-              child: Image.asset('images/cloud.png'),
+                icon: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (page_index != 1)
+                        ? Color(0xff9e7fe0)
+                        : Color(0xff35258a),
+                  ),
+                  child: Image.asset('images/cloud.png'),
                 ),
                 label: 'יומן',
               ),
               BottomNavigationBarItem(
-                icon:  Container(
-                  width:50,
+                icon: Container(
+                  width: 50,
                   height: 50,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: (page_index!=2)?Color(0xff9e7fe0):Color(0xff35258a),
+                    color: (page_index != 2)
+                        ? Color(0xff9e7fe0)
+                        : Color(0xff35258a),
                   ),
                   child: Image.asset('images/smiley.png'),
                 ),
                 label: 'פסיכוחינוך',
               ),
               BottomNavigationBarItem(
-                icon:  Container(
-                  width:50,
+                icon: Container(
+                  width: 50,
                   height: 50,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: (page_index!=3)?Color(0xff9e7fe0):Color(0xff35258a),
+                    color: (page_index != 3)
+                        ? Color(0xff9e7fe0)
+                        : Color(0xff35258a),
                   ),
                   child: Image.asset('images/human.png'),
                 ),
@@ -1074,42 +1098,10 @@ Widget nameIt(Future<String> _name, color) {
 
 Widget build_money(String text) {
   return Stack(children: [
-    Container(
-      width: 26,
-      height: 26,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-          color: Colors.black,
-          width: 2,
-        ),
-        color: Color(0xb2ffffff),
-      ),
-    ),
-    Container(
-      width: 24,
-      height: 26,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-          color: Colors.black,
-          width: 2,
-        ),
-        color: Color(0xb2ffffff),
-      ),
-    ),
-    Container(
-      width: 24,
-      height: 26,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-          color: Colors.black,
-          width: 2,
-        ),
-        color: Color(0xb2ffffff),
-      ),
-      child: Center(
+    Image.asset('images/coin.png'),
+  Positioned(
+    top:10,
+    left:10,
         child: Text(
           text,
           textAlign: TextAlign.center,
@@ -1120,6 +1112,5 @@ Widget build_money(String text) {
           ),
         ),
       ),
-    ),
   ]);
 }

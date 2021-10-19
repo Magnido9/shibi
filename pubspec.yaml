@@ -157,6 +157,9 @@ flutter:
     - images/human.png
     - images/cloud.png
     - images/talky.png
+    - images/coin.png
+    - images/staron.png
+    - images/staroff.png
 
     - music/meditation.mp3
   uses-material-design: true
