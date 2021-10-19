@@ -47,6 +47,7 @@ class FinalExpo extends StatelessWidget {
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/second': (context) => _Page2(),
           '/main': (context) => _Main(),
+          '/four': (context) => _Page4(),
           '/thoughts/1': (context) => thought1_1(),
           '/thoughts/2': (context) => thought2_1(),
           '/feelings/1': (context) => feeling1_1(),
@@ -630,6 +631,8 @@ class _MainState extends State<_Main> {
     ));
   }
 
+
+
   String _title() {
     var x = Provider.of<ExpoData>(context, listen: false).introductions;
     if (choose == 0) return x[0].item1;
@@ -737,7 +740,211 @@ class _MyButton extends StatelessWidget {
     ));
   }
 }
+class _Page4 extends StatefulWidget {
+  @override
+  _Page4State createState() => _Page4State();
+}
 
+class _Page4State extends State<_Main> {
+  double feeling=0;
+  int choose = -1;
+  @override
+  Widget build(BuildContext context) {
+    print('main');
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return Scaffold(body:
+    Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0x79F13D), Colors.white])),
+      child: Stack(
+        children: [
+          Positioned(
+              top: -150,
+              child: Container(
+                child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0, end: 0.7),
+                    duration: Duration(seconds: 1),
+                    builder:
+                        (BuildContext context, double percent, Widget? child) {
+                      return CustomPaint(
+                          painter: _LoadBar(
+                              percent: 0, size: MediaQuery.of(context).size),
+                          size: MediaQuery.of(context).size);
+                    }),
+                // color:Colors.green
+              )),
+          /*Positioned(
+              left: -0.8 * MediaQuery.of(context).size.width,
+              top: -1.25 * MediaQuery.of(context).size.height,
+              child: Container(
+                  width: 0.8125 * MediaQuery.of(context).size.height * 2,
+                  height: 0.8125 * MediaQuery.of(context).size.height * 1.8,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Color(0xffdee8f3)))),*/
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              child: FloatingActionButton(
+                elevation: 0,
+                disabledElevation: 0,
+                backgroundColor: Colors.grey.shade400,
+                onPressed: () {},
+                child: Icon(Icons.arrow_forward),
+              ),
+              margin: EdgeInsets.all(30),
+            ),
+          ),
+          Column(
+            children: [
+              Container(
+                height: 40,
+              ),
+              Row(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FlatButton(
+                    color: Colors.transparent,
+                    onPressed: () {},
+                    child: new IconTheme(
+                      data:
+                      new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
+                      child: new Icon(Icons.menu),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "            דיווח שיא",
+                      //textAlign: TextAlign.center,
+                      style: GoogleFonts.assistant(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.15,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                      margin: EdgeInsets.fromLTRB(20,20,20,0),
+                      child: Text(
+                        "מדהימים!\nדרגו את החרדה שלכם בשיא החשיפה",
+                        textAlign: TextAlign.right,
+                        textDirection: TextDirection.rtl,
+                        style: GoogleFonts.assistant(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ))
+                ],
+              ),Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                      margin: EdgeInsets.fromLTRB(20,10,20,20),
+                      child: Text(
+                        "דרגו יחידות מצוקה ברגע הכי קשה ומאתגר\n במהלך החשיפה.",
+                        textAlign: TextAlign.right,
+                        textDirection: TextDirection.rtl,
+                        style: GoogleFonts.assistant(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ))
+                ],
+              ),
+              Container(
+                margin:
+                EdgeInsets.only(left: 40, right: 40, top: 30, bottom: 0),
+                child: SfSliderTheme(
+                  data: SfSliderThemeData(
+                    activeTrackHeight: 20,
+                    inactiveTrackHeight: 20,
+                    thumbColor: Color(0xffefb3e2),
+                    inactiveTrackColor: Color(0xffececec),
+                    activeTrackColor: Color(0xffececec),
+                    thumbRadius: 20,
+                    activeDividerRadius: 0,
+                    activeDividerStrokeWidth: 0,
+                    thumbStrokeWidth: 0,
+                  ),
+                  child: SfSlider(
+
+                    value: feeling.round(),
+                    min: 0,
+                    max: 100,
+                    showLabels: true,
+                    onChanged: (dynamic value) {
+                      setState(() {
+                        feeling = value;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              /*Container(
+                child: Text
+                  (
+                  "0                                                   100",
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontFamily: "Assistant",
+                    //fontWeight: FontWeight.w700,
+                  ),
+                ),
+
+              ),*/
+              Container(
+                height: 20,
+              ),
+            ],
+          ),
+          Positioned(
+              bottom: 0,
+              child: Center(child: Image.asset('images/Soldier3.png'))),
+          Positioned(
+              top: height * 0.92,
+              right: width * 0.8,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xff35258a),
+                      shape: CircleBorder(),
+                      fixedSize: Size(55, 55),
+                    ),
+                    child: Icon(
+                      Icons.arrow_back,
+                      size: 40,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/four');
+                    },
+                  )
+                ],
+              )),
+
+        ],
+      ),
+    ));
+  }}
 class ExpoData {
   ExpoData(
       {required this.adata,
