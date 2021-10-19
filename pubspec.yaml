@@ -139,6 +139,11 @@ flutter:
     - images/skater2.png
     - images/skater.png
     - images/talk.png
+    - images/cloud1.png
+    - images/cloud2.png
+    - images/needle.png
+    - images/boom1.png
+    - images/boom2.png
 
 
     - music/meditation.mp3
