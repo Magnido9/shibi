@@ -2,7 +2,11 @@ library expo;
 
 import 'package:application/screens/Avatar/color_switch.dart';
 import 'package:application/screens/expo1/ToolsChoosing.dart';
+import 'package:application/screens/home/home.dart';
+import 'package:application/screens/login/login.dart';
+import 'package:application/screens/map/questioneer.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
@@ -100,7 +104,119 @@ class _Page1State extends State<_Page1> {
   void initState() {
     super.initState();
     _data = load();
+    _adata = AvatarData.load();
+    _name = _getname();
   }
+
+  Future<AvatarData>? _adata;
+  Future<String>? _name;
+
+  Future<String> _getname() async {
+    var name = (await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AuthRepository.instance().user?.uid)
+        .get())['name'];
+    print(name);
+    return name;
+  }
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  /*key: scaffoldKey,
+      drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Stack(children: [
+                  Stack(
+                    children: [
+                      Positioned(
+                          child: Image.asset('images/talky.png'),
+                          top: 0,
+                          right: 0),
+                      Positioned(
+                          top: 10,
+                          right: 6,
+                          child: FutureBuilder<String>(
+                            future: _name,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              // ...
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                String data = snapshot.data ?? '';
+                                return Text(
+                                  'היי $data\n מה קורה?',
+                                  textDirection: TextDirection.rtl,
+                                  style: GoogleFonts.assistant(),
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          )),
+                    ],
+                  ),
+                  Positioned(
+                      child: FutureBuilder<AvatarData>(
+                        future: _adata,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<AvatarData> snapshot) {
+                          // ...
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return AvatarStack(
+                                data: (snapshot.data ??
+                                    AvatarData(body: AvatarData.body_default)));
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      )),
+                ])),
+            ListTile(
+              title: Text("עצב דמות",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Avatar(first: false, data: _adata)));
+              },
+            ),
+            ListTile(
+              title: Text("מפת דרכים",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Home()));
+              },
+            ),ListTile(
+              title: Text("שאלון יומי",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MyQuestions()));
+              },
+            ),
+            ListTile(
+              title: Text("התנתק",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => Login()));
+              },
+            ),
+          ]),
+        ),*/
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +224,103 @@ class _Page1State extends State<_Page1> {
     double height = MediaQuery.of(context).size.height;
 
     print(width);
-    return Scaffold(
+    return Scaffold(key: scaffoldKey,
+        drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Stack(children: [
+                  Stack(
+                    children: [
+                      Positioned(
+                          child: Image.asset('images/talky.png'),
+                          top: 0,
+                          right: 0),
+                      Positioned(
+                          top: 10,
+                          right: 6,
+                          child: FutureBuilder<String>(
+                            future: _name,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              // ...
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                String data = snapshot.data ?? '';
+                                return Text(
+                                  'היי $data\n מה קורה?',
+                                  textDirection: TextDirection.rtl,
+                                  style: GoogleFonts.assistant(),
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          )),
+                    ],
+                  ),
+                  Positioned(
+                      child: FutureBuilder<AvatarData>(
+                        future: _adata,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<AvatarData> snapshot) {
+                          // ...
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return AvatarStack(
+                                data: (snapshot.data ??
+                                    AvatarData(body: AvatarData.body_default)));
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      )),
+                ])),
+            ListTile(
+              title: Text("עצב דמות",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Avatar(first: false, data: _adata)));
+              },
+            ),
+            ListTile(
+              title: Text("מפת דרכים",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Home()));
+              },
+            ),ListTile(
+              title: Text("שאלון יומי",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MyQuestions()));
+              },
+            ),
+            ListTile(
+              title: Text("התנתק",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => Login()));
+              },
+            ),
+          ]),
+        ),
         body: Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -156,10 +368,10 @@ class _Page1State extends State<_Page1> {
             children: [
               FlatButton(
                 color: Colors.transparent,
-                onPressed: () {},
+                onPressed:  () => scaffoldKey.currentState!.openDrawer(),
                 child: new IconTheme(
-                  data: new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
-                  child: new Icon(Icons.menu),
+                  data: new IconThemeData(size: 35, color: Colors.black),
+                  child: new Icon(Icons.menu_rounded),
                 ),
               ),
               Align(

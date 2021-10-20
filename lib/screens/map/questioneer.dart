@@ -87,9 +87,10 @@ class _MyQuestionsState extends State<MyQuestions> {
       print('No more questions!');
     }
   }
-
   @override
   Widget build(BuildContext context) {
+    var height=MediaQuery.of(context).size.height;
+    var width=MediaQuery.of(context).size.width;
     return MaterialApp(
       theme: ThemeData(fontFamily: "Assistant"),
       home: Scaffold(
@@ -112,21 +113,21 @@ class _MyQuestionsState extends State<MyQuestions> {
             backgroundColor: Color(0xb2ffffff),
             elevation: 0.0,
             iconTheme: IconThemeData(color: Colors.black),
-            leading: Builder(
+            leading: Padding(padding:EdgeInsets.fromLTRB(0, 20, 0, 0), child:Builder(
               builder: (context) => GestureDetector(
                   onTap: () => {
                     if(_questionIndex>0)
                       setState(() => { _questionIndex-=1})
                   },
-                  child: Icon(Icons.arrow_back)),
-            ),
+                  child: Icon(Icons.arrow_back, size: 40)),
+            )),
             actions: <Widget>[
               GestureDetector(
               onTap: () => {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (BuildContext context) => Home()))
                   },
-                  child: Icon(Icons.home)),
+                  child: Padding(padding:EdgeInsets.fromLTRB(0, 20, 20, 0), child:Icon(Icons.home , size: 40,))),
               ])
          /* iconTheme: IconThemeData(color: Colors.black),
           leading: Builder(
@@ -151,7 +152,129 @@ class _MyQuestionsState extends State<MyQuestions> {
     color: Color(
     0xb2ffffff,
     ))),
-    ),Padding(
+    ),
+
+
+        Positioned(
+          right: -100,
+          top: height * 0.25,
+child:Container(
+              height: 200,
+              width: 200,
+              child: Stack(
+                children: [
+                  Positioned(
+                      left: 5,
+                      child: Container(
+                        width: 165,
+                        height: 165,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x0c000000),
+                              blurRadius: 18,
+                              offset: Offset(0, -2),
+                            ),
+                          ],
+                          color: Color(0xfffaf5c6),
+                        ),
+                      )),
+                  Image.asset('images/Yellow_Star.png'),
+                  ],
+              )),
+        ),
+
+        Positioned(
+            left: 20,
+            top: MediaQuery.of(context).size.height * 0.12,
+            child:Stack(
+              children: [
+                Positioned(
+                    left: 5,
+                    child: Container(
+                      width: 98,
+                      height: 98,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x0c000000),
+                            blurRadius: 18,
+                            offset: Offset(0, -2),
+                          ),
+                        ],
+                        color: Color(0xffa9e1f4),
+                      ),
+                    )),
+                Image.asset('images/Blue_Star.png'),
+
+              ],
+            )
+                ),
+        Positioned(
+            left: 5,
+            top: height * 0.45,
+             child:Container(
+                height: 100,
+                width: 100,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        left: 7,
+                        top: 7,
+                        child: Container(
+                          width: 74,
+                          height: 74,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x0c000000),
+                                blurRadius: 18,
+                                offset: Offset(0, -2),
+                              ),
+                            ],
+                            color: Color(0xffefb3e2),
+                          ),
+                        )),
+                    Image.asset('images/Pink_Star.png'),
+                               ],
+                )),
+        ),
+        Positioned(
+            right: 50,
+            bottom: 50,
+             child:Container(
+                height: 150,
+                width: 150,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        left: 3,
+                        top: -1,
+                        child: Container(
+                          width: 132,
+                          height: 132,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x0c000000),
+                                blurRadius: 18,
+                                offset: Offset(0, -2),
+                              ),
+                            ],
+                            color: Color(0xffc7f5e0),
+                          ),
+                        )),
+                    Image.asset('images/Green_Star.png'),
+
+                  ],
+                )),
+        ),
+        Positioned(bottom:20,left:20,child:Transform.rotate(angle: 180,child:Image.asset('images/skater.png'))),
+        Padding(
           padding: const EdgeInsets.all(30.0),
           child: _questionIndex < _questions.length
               ? Quiz(

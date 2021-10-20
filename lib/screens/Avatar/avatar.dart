@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:application/screens/Avatar/bars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -262,6 +263,36 @@ class _AvatarPageState extends State<AvatarPage> {
               left: 22,
               top: 131.32,
               child: build_money(widget.data.money.toString())),
+          Positioned(
+              right:  MediaQuery.of(context).size.width*0.08,
+              top:  MediaQuery.of(context).size.height*0.19,child:Stack(children: [ Container(
+            width: 192,
+            height: 29,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(88),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x19000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 3),
+                ),
+              ],
+              color: Color(0xffc4c4c4),
+            ),
+
+          ),
+          Container(
+            width: 96,
+            height: 29,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(88),
+              color: Color(0xff35258a),
+            ),
+          ),
+          Positioned(  child:Text('חנות',style:GoogleFonts.assistant(color:Colors.white,fontWeight: FontWeight.w700)),left:30,top:3),
+
+            Positioned(  child:Text('המוצרים שלי',style:GoogleFonts.assistant(color:Colors.white,fontWeight: FontWeight.w700)),left:100,top:3)
+          ],)),
           Positioned(
             left: 45,
             top: 120,

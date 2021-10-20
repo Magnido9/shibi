@@ -164,7 +164,11 @@ flutter:
     - images/Shoola.png
     - images/meditate9.png
 
-    - music/meditation.mp3
+    - assets/music/guided.mp3
+    - assets/music/breathing.mp3
+    - assets/music/muscles.mp3
+    - assets/music/meditation.mp3
+
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:

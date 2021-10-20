@@ -1033,6 +1033,57 @@ Container(
 
 
   }
+  buildAppBar(){
+    return AppBar(
+        centerTitle: true,
+        title: Padding(
+          padding: EdgeInsets.only(top: 25.0),
+          child: Text(
+            "מפת דרכים",
+            //textAlign: TextAlign.center,
+            style: GoogleFonts.assistant(
+              color: Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        backgroundColor: Color(0xb2ffffff),
+        elevation: 0.0,
+        iconTheme: IconThemeData(color: Colors.black),
+        leading: Builder(
+            builder: (context) => GestureDetector(
+              onTap: () {
+                Scaffold.of(context).openDrawer();
+              },
+              child: Padding(
+                  padding: EdgeInsets.only(left: 20.0, top: 15.0),
+                  child: Icon(
+                    Icons.menu_rounded,
+                    size: 50,
+                  )),
+            )),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0, top: 25.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: FutureBuilder<String>(
+                  future: moneyd,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<String> snapshot) {
+                    // ...
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      String data = snapshot.data ?? '';
+                      print("datata:" + data);
+                      return build_money(data);
+                    }
+                    return CircularProgressIndicator();
+                  },
+                ),
+              )),
+        ]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1193,9 +1244,6 @@ Container(
                   textDirection: TextDirection.rtl,
                   style: GoogleFonts.assistant()),
               onTap: () {
-                Future<void> _signOut() async {
-                  await FirebaseAuth.instance.signOut();
-                }
 
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (BuildContext context) =>
@@ -1206,9 +1254,6 @@ Container(
                   textDirection: TextDirection.rtl,
                   style: GoogleFonts.assistant()),
               onTap: () {
-                Future<void> _signOut() async {
-                  await FirebaseAuth.instance.signOut();
-                }
 
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (BuildContext context) =>

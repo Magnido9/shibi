@@ -50,12 +50,12 @@ class StarsState extends State<Stars> {
     print("ADADSDASD       " + a.toString());
     return s;
   }
-
+  bool first=true;
   Future<AvatarData>? _adata;
   Future<String>? _name;
   var expos;
   var moneyd;
-  var _pageController;
+  PageController  _pageController=PageController(initialPage: 0);
 
   ValueNotifier<int> _currentPageNotifier = ValueNotifier<int>(0);
   Future<String> _getname() async {
@@ -77,9 +77,11 @@ class StarsState extends State<Stars> {
     print(name['tasks']);
     return name['tasks'];
   }
-
+ int page=0;
+  List<Color> colors=[Color(0xffEEDBEA),Color(0xffC7F5E1),Color(0xffA9E1F4),Color(0xffFBF6C6)];
   Color _chooseColor() {
-    int i = _currentPageNotifier.value;
+    int i = geti();
+    print("iiiiiiiiiiiiiiiiiiii             "+i.toString());
     if (i == 0) return Color(0xffEEDBEA);
     if (i == 1) return Color(0xffC7F5E1);
     if (i == 2)
@@ -89,7 +91,7 @@ class StarsState extends State<Stars> {
   }
 
   String _chooseTitle() {
-    int i = _currentPageNotifier.value;
+    int i = geti();
     if (i == 0) return "התנהגות";
     if (i == 1) return "גוף";
     if (i == 2)
@@ -99,7 +101,7 @@ class StarsState extends State<Stars> {
   }
 
   String _chooseIcon() {
-    int i = _currentPageNotifier.value;
+    int i = geti();
     if (i == 0) return "images/expo/ppl.png";
     if (i == 1) return "images/expo/meditate.png";
     if (i == 2)
@@ -108,22 +110,29 @@ class StarsState extends State<Stars> {
       return "images/expo/brain.png";
   }
 
-  int _chooseIndicator() {
-    int i = _currentPageNotifier.value;
-    return i;
+  int geti() {
+
+
+    if(first){
+     return cur_star;
+    }else
+    {return page;}
+
   }
 
   @override
   void initState() {
     super.initState();
+      background=colors[cur_star];
+      page=cur_star;
     _pageController = PageController(initialPage: cur_star);
+
     _adata = AvatarData.load();
     _name = _getname();
     moneyd = loadMoney();
     expos = _getExpos();
-    _currentPageNotifier = ValueNotifier<int>(cur_star);
   }
-
+  Color background=Colors.white;
   @override
   Widget build(BuildContext context) {
     /*GestureDetector(
@@ -223,27 +232,31 @@ class StarsState extends State<Stars> {
                           height: height * 0.7,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: _chooseColor(),
+                            color: background,
                           ),
-                          child: PageView.builder(
+                          child: PageView(
                             scrollDirection: Axis.horizontal,
                             onPageChanged: (int index) {
-                              _currentPageNotifier.value = index;
+                              print("DAsdsadfaswf:::::::::::::"+index.toString());
+                              if(first)
+                                first=false;
+
+                              background=colors[index];
+                                page=index;
+                                _currentPageNotifier.value = index;
                               setState(() {});
                             },
-
-                            itemCount: 4,
                             controller: _pageController,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Column(
+                  children: [ for (var i = 0; i < 4; i++)
+                    Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    ExpoStars(3,expos,_adata,0,_currentPageNotifier.value),
-                              ExpoStars(2,expos,_adata,3,_currentPageNotifier.value),
+                                    ExpoStars(3,expos,_adata,0,i),
+                              ExpoStars(2,expos,_adata,3,i),
                                     Container(height: 5)
-                                  ]);
-                            },
+                                  ])],
+
                           ),
                         )),
                     Positioned(
@@ -265,7 +278,10 @@ class StarsState extends State<Stars> {
           ]),
           Positioned(
             top: 0.13 * height,
-            left: (_currentPageNotifier.value == 0 ||
+            left: (first)?((cur_star == 0 ||
+                cur_star == 3)
+                ? width * 0.4
+                : width * 0.45):(_currentPageNotifier.value == 0 ||
                     _currentPageNotifier.value == 3)
                 ? width * 0.4
                 : width * 0.45,

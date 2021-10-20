@@ -1,5 +1,9 @@
 library expo;
+import 'package:application/screens/home/home.dart';
+import 'package:application/screens/login/login.dart';
+import 'package:application/screens/map/questioneer.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:tuple/tuple.dart';
 
@@ -39,6 +43,12 @@ class BodyTools extends StatelessWidget {
           '/': (context) => _Page1(),
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/second': (context) => _Page2(),
+          // When navigating to the "/second" route, build the SecondScreen widget.
+          '/3': (context) => _Page3(),
+          // When navigating to the "/second" route, build the SecondScreen widget.
+          '/4': (context) => _Page4(),
+          // When navigating to the "/second" route, build the SecondScreen widget.
+          '/5': (context) => _Page5(),
           '/main': (context) => _Main(),
           '/thoughts/1': (context) => thought1_1(),
           '/thoughts/2': (context) => thought2_1(),
@@ -57,11 +67,128 @@ class _Page1 extends StatefulWidget {
 }
 
 class _Page1State extends State<_Page1> {
+
+  Future<AvatarData>? _adata;
+  Future<String>? _name;
+  @override
+  void initState() {
+    super.initState();
+    _adata = AvatarData.load();
+    _name = _getname();
+  }
+
+  Future<String> _getname() async {
+    var name = (await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AuthRepository.instance().user?.uid)
+        .get())['name'];
+    print(name);
+    return name;
+  }
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  /**/
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return Scaffold(
+    return Scaffold(key: scaffoldKey,
+      drawer: Drawer(
+        child: ListView(padding: EdgeInsets.zero, children: [
+          DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Stack(children: [
+                Stack(
+                  children: [
+                    Positioned(
+                        child: Image.asset('images/talky.png'),
+                        top: 0,
+                        right: 0),
+                    Positioned(
+                        top: 10,
+                        right: 6,
+                        child: FutureBuilder<String>(
+                          future: _name,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            // ...
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              String data = snapshot.data ?? '';
+                              return Text(
+                                'היי $data\n מה קורה?',
+                                textDirection: TextDirection.rtl,
+                                style: GoogleFonts.assistant(),
+                              );
+                            }
+                            return CircularProgressIndicator();
+                          },
+                        )),
+                  ],
+                ),
+                Positioned(
+                    child: FutureBuilder<AvatarData>(
+                      future: _adata,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<AvatarData> snapshot) {
+                        // ...
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return AvatarStack(
+                              data: (snapshot.data ??
+                                  AvatarData(body: AvatarData.body_default)));
+                        }
+                        return CircularProgressIndicator();
+                      },
+                    )),
+              ])),
+          ListTile(
+            title: Text("עצב דמות",
+                textDirection: TextDirection.rtl,
+                style: GoogleFonts.assistant()),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      Avatar(first: false, data: _adata)));
+            },
+          ),
+          ListTile(
+            title: Text("מפת דרכים",
+                textDirection: TextDirection.rtl,
+                style: GoogleFonts.assistant()),
+            onTap: () {
+
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      Home()));
+            },
+          ),ListTile(
+            title: Text("שאלון יומי",
+                textDirection: TextDirection.rtl,
+                style: GoogleFonts.assistant()),
+            onTap: () {
+
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      MyQuestions()));
+            },
+          ),
+          ListTile(
+            title: Text("התנתק",
+                textDirection: TextDirection.rtl,
+                style: GoogleFonts.assistant()),
+            onTap: () {
+              Future<void> _signOut() async {
+                await FirebaseAuth.instance.signOut();
+              }
+
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) => Login()));
+            },
+          ),
+        ]),
+      ),
       body: Stack(
         children: [
           Positioned(top:-150,child:
@@ -104,10 +231,10 @@ class _Page1State extends State<_Page1> {
               children: [
                 FlatButton(
                   color: Colors.transparent,
-                  onPressed: () {},
+                  onPressed:  () => scaffoldKey.currentState!.openDrawer(),
                   child: new IconTheme(
-                    data: new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
-                    child: new Icon(Icons.menu),
+                    data: new IconThemeData(size: 35, color: Colors.black),
+                    child: new Icon(Icons.menu_rounded),
                   ),
                 ),
                 Align(
@@ -126,8 +253,8 @@ class _Page1State extends State<_Page1> {
             )
     ]),
           Positioned(
-            top:125,
-            left: 170,
+            top:140,
+            left: 190,
             child:
             Container(
               padding: EdgeInsets.all(5),
@@ -275,7 +402,7 @@ class _Page1State extends State<_Page1> {
                         width: 173,
                         height: 19,
                         child: Text(
-                          "3 דקות",
+                          "12 דקות",
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.assistant(
@@ -292,7 +419,12 @@ class _Page1State extends State<_Page1> {
               Positioned.fill(
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: Container(
+                  child:
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushNamed(context, '/3');
+                    },
+                    child:Container(
                     width: 173,
                     height: 118,
                     decoration: BoxDecoration(
@@ -322,11 +454,16 @@ class _Page1State extends State<_Page1> {
                     ),
                   ),
                 ),
-              ),
+              )),
               Positioned.fill(
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: Container(
+                  child:
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushNamed(context, '/4');
+                    },
+                    child:Container(
                     width: 173,
                     height: 118,
                     decoration: BoxDecoration(
@@ -358,7 +495,7 @@ class _Page1State extends State<_Page1> {
                           width: 173,
                           height: 19,
                           child: Text(
-                            "7 דקות",
+                            "9 דקות",
                             textDirection: TextDirection.rtl,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.assistant(
@@ -371,11 +508,16 @@ class _Page1State extends State<_Page1> {
                     ),
                   ),
                 ),
-              ),
+              )),
               Positioned.fill(
                 child: Align(
                   alignment: Alignment.bottomRight,
-                  child: Container(
+                  child:
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushNamed(context, '/5');
+                    },
+                    child:Container(
                     width: 173,
                     height: 118,
                     decoration: BoxDecoration(
@@ -392,7 +534,7 @@ class _Page1State extends State<_Page1> {
                           width: 173,
                           height: 19,
                           child: Text(
-                            "10 דקות",
+                            "13 דקות",
                             textDirection: TextDirection.rtl,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.assistant(
@@ -405,7 +547,7 @@ class _Page1State extends State<_Page1> {
                     ),
                   ),
                 ),
-              ),
+              )),
               Positioned(
                 left: 188,
                 top: 37,
@@ -442,7 +584,9 @@ class _Page1State extends State<_Page1> {
                 ),
               ),],
           ),
-        ))
+        )),
+
+           Positioned(bottom:10,left:100,child:Image.asset('images/shibi_pages/green.png'))
             ]
       ),
     );
@@ -460,12 +604,14 @@ class _Page2State extends State<_Page2> {
   Duration _position = new Duration();
   Timer? timer;
   Duration duration = Duration();
-  int length=60*12+17;
+  int length=60*12+55;
 
   @override
   void dispose() {
     super.dispose();
     timer?.cancel();
+    audioCache.clearAll();
+    music.stop();
   }
 
   void reset() {
@@ -495,11 +641,173 @@ class _Page2State extends State<_Page2> {
     setState(() => timer?.cancel());
   }
   bool playing=false;
+
+  Future<AvatarData>? _adata;
+  Future<String>? _name;
+  @override
+  void initState() {
+    super.initState();
+    _adata = AvatarData.load();
+    _name = _getname();
+  }
+
+  Future<String> _getname() async {
+    var name = (await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AuthRepository.instance().user?.uid)
+        .get())['name'];
+    print(name);
+    return name;
+  }
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  /**/
+  AudioCache audioCache = new AudioCache();
+  AudioPlayer advancedPlayer = new AudioPlayer();
+
+  Widget _tab(List<Widget> children) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: children
+              .map((w) => Container(child: w, padding: EdgeInsets.all(6.0)))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _btn(String txt, VoidCallback onPressed) {
+    return ButtonTheme(
+        minWidth: 48.0,
+        child: RaisedButton(child: Text(txt), onPressed: onPressed));
+  }
+
+  Widget localAsset() {
+    return _tab([
+      Text('Play Local Asset \'audio.mp3\':'),
+      _btn('Play', () => audioCache.play('audio.mp3'))
+    ]);
+  }
+   // create this
+  bool first=true;
+  void _playFile() async{
+    if(first){
+      startTimer();
+      music = await audioCache.play('music/muscles.mp3');}
+     // assign player here
+    else{
+
+      startTimer();
+      music.resume();
+
+    }
+    first=false;
+  }
+  void _stopFile() {
+    stopTimer();
+    music?.pause(); // stop the file like this
+  }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return Scaffold(
+    return Scaffold(key: scaffoldKey,
+        drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Stack(children: [
+                  Stack(
+                    children: [
+                      Positioned(
+                          child: Image.asset('images/talky.png'),
+                          top: 0,
+                          right: 0),
+                      Positioned(
+                          top: 10,
+                          right: 6,
+                          child: FutureBuilder<String>(
+                            future: _name,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              // ...
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                String data = snapshot.data ?? '';
+                                return Text(
+                                  'היי $data\n מה קורה?',
+                                  textDirection: TextDirection.rtl,
+                                  style: GoogleFonts.assistant(),
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          )),
+                    ],
+                  ),
+                  Positioned(
+                      child: FutureBuilder<AvatarData>(
+                        future: _adata,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<AvatarData> snapshot) {
+                          // ...
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return AvatarStack(
+                                data: (snapshot.data ??
+                                    AvatarData(body: AvatarData.body_default)));
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      )),
+                ])),
+            ListTile(
+              title: Text("עצב דמות",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Avatar(first: false, data: _adata)));
+              },
+            ),
+            ListTile(
+              title: Text("מפת דרכים",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Home()));
+              },
+            ),ListTile(
+              title: Text("שאלון יומי",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MyQuestions()));
+              },
+            ),
+            ListTile(
+              title: Text("התנתק",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => Login()));
+              },
+            ),
+          ]),
+        ),
       body: Stack(
         children: [  Positioned(top:-150,child:
         Container(
@@ -541,10 +849,10 @@ class _Page2State extends State<_Page2> {
                 children: [
                   FlatButton(
                     color: Colors.transparent,
-                    onPressed: () {},
+                    onPressed:  () => scaffoldKey.currentState!.openDrawer(),
                     child: new IconTheme(
-                      data: new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
-                      child: new Icon(Icons.menu),
+                      data: new IconThemeData(size: 35, color: Colors.black),
+                      child: new Icon(Icons.menu_rounded),
                     ),
                   ),
                   Align(
@@ -632,29 +940,15 @@ class _Page2State extends State<_Page2> {
                           ,
                       onPressed:   ()   {
 setState(() {
-  if (music.state == PlayerState.PLAYING) {
-    stopTimer();
-    music.pause();
+  if(playing){
+    _stopFile();
     playing=false;
-  }
-  else if (music.state == PlayerState.PAUSED) {
-    startTimer();
-    music.resume();
+  }else{
+    _playFile();
     playing=true;
   }
-  else if (music.state == PlayerState.STOPPED) {
-    startTimer();
-    music.play(
-        'https://v3-fastupload.s3-accelerate.amazonaws.com/1634553458-m.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIASQBHBZCRVR4NVFHK%2F20211018%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20211018T103751Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Signature=144428c197c9417f46348a691ade244fb61183710667355ecf64987f3aae19fe');
-  playing=true;
   }
-  else {
-    startTimer();
-    music.play(
-        'https://v3-fastupload.s3-accelerate.amazonaws.com/1634553458-m.mp3?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIASQBHBZCRVR4NVFHK%2F20211018%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20211018T103751Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Signature=144428c197c9417f46348a691ade244fb61183710667355ecf64987f3aae19fe');
-  playing=true;
-  }
-});          }
+  );          }
 
                       ,
                     ),
@@ -693,6 +987,1188 @@ setState(() {
     ]));
   }
 }
+class _Page3 extends StatefulWidget {
+  @override
+  _Page3State createState() => _Page3State();
+}
+
+class _Page3State extends State<_Page3> {
+  double feeling = 50;
+  AudioPlayer music=AudioPlayer();
+  Duration _position = new Duration();
+  Timer? timer;
+  Duration duration = Duration();
+  int length=60*1+49;
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
+    audioCache.clearAll();
+    music.stop();
+  }
+
+  void reset() {
+    setState(() => duration = Duration());
+
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+  }
+
+  void addTime() {
+    setState(() {
+      final seconds = duration.inSeconds + 1;
+      if (seconds >=length) {
+        stopTimer(resets:true);
+      } else {
+        duration = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  void stopTimer({bool resets = false}) {
+    if (resets) {
+      reset();
+    }
+    setState(() => timer?.cancel());
+  }
+  bool playing=false;
+
+  Future<AvatarData>? _adata;
+  Future<String>? _name;
+  @override
+  void initState() {
+    super.initState();
+    _adata = AvatarData.load();
+    _name = _getname();
+  }
+
+  Future<String> _getname() async {
+    var name = (await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AuthRepository.instance().user?.uid)
+        .get())['name'];
+    print(name);
+    return name;
+  }
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  /**/
+  AudioCache audioCache = new AudioCache();
+  AudioPlayer advancedPlayer = new AudioPlayer();
+
+  Widget _tab(List<Widget> children) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: children
+              .map((w) => Container(child: w, padding: EdgeInsets.all(6.0)))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _btn(String txt, VoidCallback onPressed) {
+    return ButtonTheme(
+        minWidth: 48.0,
+        child: RaisedButton(child: Text(txt), onPressed: onPressed));
+  }
+
+  Widget localAsset() {
+    return _tab([
+      Text('Play Local Asset \'audio.mp3\':'),
+      _btn('Play', () => audioCache.play('audio.mp3'))
+    ]);
+  }
+  // create this
+  bool first=true;
+  void _playFile() async{
+    if(first){
+      startTimer();
+      music = await audioCache.play('music/breathing.mp3');}
+    // assign player here
+    else{
+
+      startTimer();
+      music.resume();
+
+    }
+    first=false;
+  }
+  void _stopFile() {
+    stopTimer();
+    music?.pause(); // stop the file like this
+  }
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return Scaffold(key: scaffoldKey,
+        drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Stack(children: [
+                  Stack(
+                    children: [
+                      Positioned(
+                          child: Image.asset('images/talky.png'),
+                          top: 0,
+                          right: 0),
+                      Positioned(
+                          top: 10,
+                          right: 6,
+                          child: FutureBuilder<String>(
+                            future: _name,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              // ...
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                String data = snapshot.data ?? '';
+                                return Text(
+                                  'היי $data\n מה קורה?',
+                                  textDirection: TextDirection.rtl,
+                                  style: GoogleFonts.assistant(),
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          )),
+                    ],
+                  ),
+                  Positioned(
+                      child: FutureBuilder<AvatarData>(
+                        future: _adata,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<AvatarData> snapshot) {
+                          // ...
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return AvatarStack(
+                                data: (snapshot.data ??
+                                    AvatarData(body: AvatarData.body_default)));
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      )),
+                ])),
+            ListTile(
+              title: Text("עצב דמות",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Avatar(first: false, data: _adata)));
+              },
+            ),
+            ListTile(
+              title: Text("מפת דרכים",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Home()));
+              },
+            ),ListTile(
+              title: Text("שאלון יומי",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MyQuestions()));
+              },
+            ),
+            ListTile(
+              title: Text("התנתק",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => Login()));
+              },
+            ),
+          ]),
+        ),
+        body: Stack(
+            children: [  Positioned(top:-150,child:
+            Container(
+              child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: 0.7),
+                  duration: Duration(seconds: 1),
+                  builder:
+                      (BuildContext context, double percent, Widget? child) {
+                    return CustomPaint(
+                        painter: _LoadBar(percent: -1, size: MediaQuery.of(context).size),
+                        size: MediaQuery.of(context).size);
+                  }),
+              // color:Colors.green
+            )),
+
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  child: FloatingActionButton(
+                    elevation: 0,
+                    disabledElevation: 0,
+                    backgroundColor: Colors.grey.shade400,
+                    onPressed: () {
+                      timer?.cancel();
+                      Navigator.pop(context);
+                    },
+                    child: Icon(Icons.arrow_forward),
+                  ),
+                  margin: EdgeInsets.all(30),
+                ),
+              ),
+
+              Column(
+                children: [
+                  Container(
+                    height: 40,
+                  ),
+                  Row(
+                    children: [
+                      FlatButton(
+                        color: Colors.transparent,
+                        onPressed:  () => scaffoldKey.currentState!.openDrawer(),
+                        child: new IconTheme(
+                          data: new IconThemeData(size: 35, color: Colors.black),
+                          child: new Icon(Icons.menu_rounded),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "        תרגילי נשימה",
+                          //textAlign: TextAlign.center,
+                          style: GoogleFonts.assistant(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),),
+
+                    ],
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.15,
+                  ),
+                  Container(
+                      width: 358,
+                      height: 255,
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children:[
+                            Container(
+                                width: 358,
+                                height: 255,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x3f000000),
+                                      blurRadius: 10,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                  color: Color(0xffdeeef3),
+                                ),
+                                padding: const EdgeInsets.only(left: 30, right: 31, top: 37, bottom: 25, ),
+                                child:Column(children:[
+                                  Text(
+                                    "תרגיל זה יעזור לכם \n"
+                                        "להירגע במקרים של לחץ וחרדה\n",
+                                    textAlign: TextAlign.right,
+                                    style: GoogleFonts.assistant(
+                                      color: CupertinoColors.systemGrey,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+
+                                  Text(" לחצו על הכפתור להתחלת התרגיל",
+                                    textAlign: TextAlign.right,
+                                    style: GoogleFonts.assistant(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+
+                                  //                        " לחצו על הכפתור להתחלת התרגיל",
+                                  Container(height:20),
+                                  Row(children:[
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Color(0xff8eafc3),
+                                        shape: CircleBorder(),
+                                        fixedSize: Size(
+                                            57,
+                                            57
+                                        ),
+                                      ),
+                                      child:playing? Icon(
+                                        Icons.pause_rounded,
+                                        size: 45,
+                                        color: Colors.white,
+                                      ):Icon(
+                                        Icons.play_arrow_rounded,
+                                        size: 45,
+                                        color: Colors.white,
+                                      )
+
+                                      ,
+                                      onPressed:   ()   {
+                                        setState(() {
+                                          if(playing){
+                                            _stopFile();
+                                            playing=false;
+                                          }else{
+                                            _playFile();
+                                            playing=true;
+                                          }
+                                        }
+                                        );          }
+
+                                      ,
+                                    ),
+                                    Container(width:230,child:
+                                    SliderTheme(
+                                      child:Slider(
+                                          value: duration.inSeconds.toDouble(),
+                                          min: 0.0,
+                                          max: 12*60+17,
+
+                                          onChanged: (double value) {
+                                            setState(() {
+                                              value = value;
+                                              print(value);
+                                            });})
+                                      ,data:SliderTheme.of(context).copyWith(
+
+                                        inactiveTrackColor: Color(0xffc1c1c1) ,
+                                        activeTrackColor: Color(0xff6c92a7),
+                                        overlayColor: Color(0xff6c92a7),
+                                        trackHeight: 2,
+                                        thumbColor: Colors.transparent,
+                                        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 0.0)),
+                                    ),)
+
+                                  ])
+                                ])
+
+                            ),])),
+                ],
+              ),
+              Positioned(
+                  bottom: 0,
+                  child: Image.asset('images/meditate1.png')
+              )
+            ]));
+  }
+}
+class _Page4 extends StatefulWidget {
+  @override
+  _Page4State createState() => _Page4State();
+}
+
+class _Page4State extends State<_Page4> {
+  double feeling = 50;
+  AudioPlayer music=AudioPlayer();
+  Duration _position = new Duration();
+  Timer? timer;
+  Duration duration = Duration();
+  int length=60*9+12;
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
+    audioCache.clearAll();
+    music.stop();
+  }
+
+  void reset() {
+    setState(() => duration = Duration());
+
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+  }
+
+  void addTime() {
+    setState(() {
+      final seconds = duration.inSeconds + 1;
+      if (seconds >=length) {
+        stopTimer(resets:true);
+      } else {
+        duration = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  void stopTimer({bool resets = false}) {
+    if (resets) {
+      reset();
+    }
+    setState(() => timer?.cancel());
+  }
+  bool playing=false;
+
+  Future<AvatarData>? _adata;
+  Future<String>? _name;
+  @override
+  void initState() {
+    super.initState();
+    _adata = AvatarData.load();
+    _name = _getname();
+  }
+
+  Future<String> _getname() async {
+    var name = (await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AuthRepository.instance().user?.uid)
+        .get())['name'];
+    print(name);
+    return name;
+  }
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  /**/
+  AudioCache audioCache = new AudioCache();
+  AudioPlayer advancedPlayer = new AudioPlayer();
+
+  Widget _tab(List<Widget> children) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: children
+              .map((w) => Container(child: w, padding: EdgeInsets.all(6.0)))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _btn(String txt, VoidCallback onPressed) {
+    return ButtonTheme(
+        minWidth: 48.0,
+        child: RaisedButton(child: Text(txt), onPressed: onPressed));
+  }
+
+  Widget localAsset() {
+    return _tab([
+      Text('Play Local Asset \'audio.mp3\':'),
+      _btn('Play', () => audioCache.play('audio.mp3'))
+    ]);
+  }
+  // create this
+  bool first=true;
+  void _playFile() async{
+    if(first){
+      startTimer();
+      music = await audioCache.play('music/guided.mp3');}
+    // assign player here
+    else{
+
+      startTimer();
+      music.resume();
+
+    }
+    first=false;
+  }
+  void _stopFile() {
+    stopTimer();
+    music?.pause(); // stop the file like this
+  }
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return Scaffold(key: scaffoldKey,
+        drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Stack(children: [
+                  Stack(
+                    children: [
+                      Positioned(
+                          child: Image.asset('images/talky.png'),
+                          top: 0,
+                          right: 0),
+                      Positioned(
+                          top: 10,
+                          right: 6,
+                          child: FutureBuilder<String>(
+                            future: _name,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              // ...
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                String data = snapshot.data ?? '';
+                                return Text(
+                                  'היי $data\n מה קורה?',
+                                  textDirection: TextDirection.rtl,
+                                  style: GoogleFonts.assistant(),
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          )),
+                    ],
+                  ),
+                  Positioned(
+                      child: FutureBuilder<AvatarData>(
+                        future: _adata,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<AvatarData> snapshot) {
+                          // ...
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return AvatarStack(
+                                data: (snapshot.data ??
+                                    AvatarData(body: AvatarData.body_default)));
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      )),
+                ])),
+            ListTile(
+              title: Text("עצב דמות",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Avatar(first: false, data: _adata)));
+              },
+            ),
+            ListTile(
+              title: Text("מפת דרכים",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Home()));
+              },
+            ),ListTile(
+              title: Text("שאלון יומי",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MyQuestions()));
+              },
+            ),
+            ListTile(
+              title: Text("התנתק",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => Login()));
+              },
+            ),
+          ]),
+        ),
+        body: Stack(
+            children: [  Positioned(top:-150,child:
+            Container(
+              child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: 0.7),
+                  duration: Duration(seconds: 1),
+                  builder:
+                      (BuildContext context, double percent, Widget? child) {
+                    return CustomPaint(
+                        painter: _LoadBar(percent: -1, size: MediaQuery.of(context).size),
+                        size: MediaQuery.of(context).size);
+                  }),
+              // color:Colors.green
+            )),
+
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  child: FloatingActionButton(
+                    elevation: 0,
+                    disabledElevation: 0,
+                    backgroundColor: Colors.grey.shade400,
+                    onPressed: () {
+                      timer?.cancel();
+                      Navigator.pop(context);
+                    },
+                    child: Icon(Icons.arrow_forward),
+                  ),
+                  margin: EdgeInsets.all(30),
+                ),
+              ),
+
+              Column(
+                children: [
+                  Container(
+                    height: 40,
+                  ),
+                  Row(
+                    children: [
+                      FlatButton(
+                        color: Colors.transparent,
+                        onPressed:  () => scaffoldKey.currentState!.openDrawer(),
+                        child: new IconTheme(
+                          data: new IconThemeData(size: 35, color: Colors.black),
+                          child: new Icon(Icons.menu_rounded),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "        דמיון מודרך",
+                          //textAlign: TextAlign.center,
+                          style: GoogleFonts.assistant(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),),
+
+                    ],
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.15,
+                  ),
+                  Container(
+                      width: 358,
+                      height: 255,
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children:[
+                            Container(
+                                width: 358,
+                                height: 255,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x3f000000),
+                                      blurRadius: 10,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                  color: Color(0xffdeeef3),
+                                ),
+                                padding: const EdgeInsets.only(left: 30, right: 31, top: 37, bottom: 25, ),
+                                child:Column(children:[
+                                  Text(
+                                    "לפני התחלת תרגיל הדמיון המודרך\n"
+                                        " עצמו עיניים והתכוננו לתרגיל\n",
+                                    textAlign: TextAlign.right,
+                                    style: GoogleFonts.assistant(
+                                      color: CupertinoColors.systemGrey,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+
+                                  Text(" לחצו על הכפתור להתחלת התרגיל",
+                                    textAlign: TextAlign.right,
+                                    style: GoogleFonts.assistant(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+
+                                  //                        " לחצו על הכפתור להתחלת התרגיל",
+                                  Container(height:20),
+                                  Row(children:[
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Color(0xff8eafc3),
+                                        shape: CircleBorder(),
+                                        fixedSize: Size(
+                                            57,
+                                            57
+                                        ),
+                                      ),
+                                      child:playing? Icon(
+                                        Icons.pause_rounded,
+                                        size: 45,
+                                        color: Colors.white,
+                                      ):Icon(
+                                        Icons.play_arrow_rounded,
+                                        size: 45,
+                                        color: Colors.white,
+                                      )
+
+                                      ,
+                                      onPressed:   ()   {
+                                        setState(() {
+                                          if(playing){
+                                            _stopFile();
+                                            playing=false;
+                                          }else{
+                                            _playFile();
+                                            playing=true;
+                                          }
+                                        }
+                                        );          }
+
+                                      ,
+                                    ),
+                                    Container(width:230,child:
+                                    SliderTheme(
+                                      child:Slider(
+                                          value: duration.inSeconds.toDouble(),
+                                          min: 0.0,
+                                          max: 12*60+17,
+
+                                          onChanged: (double value) {
+                                            setState(() {
+                                              value = value;
+                                              print(value);
+                                            });})
+                                      ,data:SliderTheme.of(context).copyWith(
+
+                                        inactiveTrackColor: Color(0xffc1c1c1) ,
+                                        activeTrackColor: Color(0xff6c92a7),
+                                        overlayColor: Color(0xff6c92a7),
+                                        trackHeight: 2,
+                                        thumbColor: Colors.transparent,
+                                        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 0.0)),
+                                    ),)
+
+                                  ])
+                                ])
+
+                            ),])),
+                ],
+              ),
+              Positioned(
+                  bottom: 0,
+                  child: Image.asset('images/meditate1.png')
+              )
+            ]));
+  }
+}
+class _Page5 extends StatefulWidget {
+  @override
+  _Page5State createState() => _Page5State();
+}
+
+class _Page5State extends State<_Page5> {
+  double feeling = 50;
+  AudioPlayer music=AudioPlayer();
+  Duration _position = new Duration();
+  Timer? timer;
+  Duration duration = Duration();
+  int length=60*12+55;
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
+    audioCache.clearAll();
+    music.stop();
+  }
+
+  void reset() {
+    setState(() => duration = Duration());
+
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+  }
+
+  void addTime() {
+    setState(() {
+      final seconds = duration.inSeconds + 1;
+      if (seconds >=length) {
+        stopTimer(resets:true);
+      } else {
+        duration = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  void stopTimer({bool resets = false}) {
+    if (resets) {
+      reset();
+    }
+    setState(() => timer?.cancel());
+  }
+  bool playing=false;
+
+  Future<AvatarData>? _adata;
+  Future<String>? _name;
+  @override
+  void initState() {
+    super.initState();
+    _adata = AvatarData.load();
+    _name = _getname();
+  }
+
+  Future<String> _getname() async {
+    var name = (await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AuthRepository.instance().user?.uid)
+        .get())['name'];
+    print(name);
+    return name;
+  }
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  /**/
+  AudioCache audioCache = new AudioCache();
+  AudioPlayer advancedPlayer = new AudioPlayer();
+
+  Widget _tab(List<Widget> children) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: children
+              .map((w) => Container(child: w, padding: EdgeInsets.all(6.0)))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _btn(String txt, VoidCallback onPressed) {
+    return ButtonTheme(
+        minWidth: 48.0,
+        child: RaisedButton(child: Text(txt), onPressed: onPressed));
+  }
+
+  Widget localAsset() {
+    return _tab([
+      Text('Play Local Asset \'audio.mp3\':'),
+      _btn('Play', () => audioCache.play('audio.mp3'))
+    ]);
+  }
+  // create this
+  bool first=true;
+  void _playFile() async{
+    if(first){
+      startTimer();
+      music = await audioCache.play('music/meditation.mp3');}
+    // assign player here
+    else{
+
+      startTimer();
+      music.resume();
+
+    }
+    first=false;
+  }
+  void _stopFile() {
+    stopTimer();
+    music?.pause(); // stop the file like this
+  }
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return Scaffold(key: scaffoldKey,
+        drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Stack(children: [
+                  Stack(
+                    children: [
+                      Positioned(
+                          child: Image.asset('images/talky.png'),
+                          top: 0,
+                          right: 0),
+                      Positioned(
+                          top: 10,
+                          right: 6,
+                          child: FutureBuilder<String>(
+                            future: _name,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              // ...
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                String data = snapshot.data ?? '';
+                                return Text(
+                                  'היי $data\n מה קורה?',
+                                  textDirection: TextDirection.rtl,
+                                  style: GoogleFonts.assistant(),
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          )),
+                    ],
+                  ),
+                  Positioned(
+                      child: FutureBuilder<AvatarData>(
+                        future: _adata,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<AvatarData> snapshot) {
+                          // ...
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return AvatarStack(
+                                data: (snapshot.data ??
+                                    AvatarData(body: AvatarData.body_default)));
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      )),
+                ])),
+            ListTile(
+              title: Text("עצב דמות",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Avatar(first: false, data: _adata)));
+              },
+            ),
+            ListTile(
+              title: Text("מפת דרכים",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Home()));
+              },
+            ),ListTile(
+              title: Text("שאלון יומי",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MyQuestions()));
+              },
+            ),
+            ListTile(
+              title: Text("התנתק",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => Login()));
+              },
+            ),
+          ]),
+        ),
+        body: Stack(
+            children: [  Positioned(top:-150,child:
+            Container(
+              child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: 0.7),
+                  duration: Duration(seconds: 1),
+                  builder:
+                      (BuildContext context, double percent, Widget? child) {
+                    return CustomPaint(
+                        painter: _LoadBar(percent: -1, size: MediaQuery.of(context).size),
+                        size: MediaQuery.of(context).size);
+                  }),
+              // color:Colors.green
+            )),
+
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  child: FloatingActionButton(
+                    elevation: 0,
+                    disabledElevation: 0,
+                    backgroundColor: Colors.grey.shade400,
+                    onPressed: () {
+                      timer?.cancel();
+                      Navigator.pop(context);
+                    },
+                    child: Icon(Icons.arrow_forward),
+                  ),
+                  margin: EdgeInsets.all(30),
+                ),
+              ),
+
+              Column(
+                children: [
+                  Container(
+                    height: 40,
+                  ),
+                  Row(
+                    children: [
+                      FlatButton(
+                        color: Colors.transparent,
+                        onPressed:  () => scaffoldKey.currentState!.openDrawer(),
+                        child: new IconTheme(
+                          data: new IconThemeData(size: 35, color: Colors.black),
+                          child: new Icon(Icons.menu_rounded),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "            מדיטציה",
+                          //textAlign: TextAlign.center,
+                          style: GoogleFonts.assistant(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),),
+
+                    ],
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.15,
+                  ),
+                  Container(
+                      width: 358,
+                      height: 255,
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children:[
+                            Container(
+                                width: 358,
+                                height: 255,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x3f000000),
+                                      blurRadius: 10,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                  color: Color(0xffdeeef3),
+                                ),
+                                padding: const EdgeInsets.only(left: 30, right: 31, top: 37, bottom: 25, ),
+                                child:Column(children:[
+                                  Text(
+                                    "לפני התחלת תרגיל המדיטציה\n"
+                                        "עברו למצב של ישיבה או שכיבה\n",
+                                    textAlign: TextAlign.right,
+                                    style: GoogleFonts.assistant(
+                                      color: CupertinoColors.systemGrey,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+
+                                  Text(" לחצו על הכפתור להתחלת התרגיל",
+                                    textAlign: TextAlign.right,
+                                    style: GoogleFonts.assistant(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+
+                                  //                        " לחצו על הכפתור להתחלת התרגיל",
+                                  Container(height:20),
+                                  Row(children:[
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Color(0xff8eafc3),
+                                        shape: CircleBorder(),
+                                        fixedSize: Size(
+                                            57,
+                                            57
+                                        ),
+                                      ),
+                                      child:playing? Icon(
+                                        Icons.pause_rounded,
+                                        size: 45,
+                                        color: Colors.white,
+                                      ):Icon(
+                                        Icons.play_arrow_rounded,
+                                        size: 45,
+                                        color: Colors.white,
+                                      )
+
+                                      ,
+                                      onPressed:   ()   {
+                                        setState(() {
+                                          if(playing){
+                                            _stopFile();
+                                            playing=false;
+                                          }else{
+                                            _playFile();
+                                            playing=true;
+                                          }
+                                        }
+                                        );          }
+
+                                      ,
+                                    ),
+                                    Container(width:230,child:
+                                    SliderTheme(
+                                      child:Slider(
+                                          value: duration.inSeconds.toDouble(),
+                                          min: 0.0,
+                                          max: 12*60+17,
+
+                                          onChanged: (double value) {
+                                            setState(() {
+                                              value = value;
+                                              print(value);
+                                            });})
+                                      ,data:SliderTheme.of(context).copyWith(
+
+                                        inactiveTrackColor: Color(0xffc1c1c1) ,
+                                        activeTrackColor: Color(0xff6c92a7),
+                                        overlayColor: Color(0xff6c92a7),
+                                        trackHeight: 2,
+                                        thumbColor: Colors.transparent,
+                                        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 0.0)),
+                                    ),)
+
+                                  ])
+                                ])
+
+                            ),])),
+                ],
+              ),
+              Positioned(
+                  bottom: 0,
+                  child: Image.asset('images/meditate1.png')
+              )
+            ]));
+  }
+}
 
 class _Main extends StatefulWidget {
   @override
@@ -701,13 +2177,130 @@ class _Main extends StatefulWidget {
 
 class _MainState extends State<_Main> {
   int choose = -1;
+
+  Future<AvatarData>? _adata;
+  Future<String>? _name;
+  @override
+  void initState() {
+    super.initState();
+    _adata = AvatarData.load();
+    _name = _getname();
+  }
+
+  Future<String> _getname() async {
+    var name = (await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AuthRepository.instance().user?.uid)
+        .get())['name'];
+    print(name);
+    return name;
+  }
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  /**/
+
   @override
   Widget build(BuildContext context) {
     print('main');
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
+    return Scaffold(key: scaffoldKey,
+        drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+            DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Stack(children: [
+                  Stack(
+                    children: [
+                      Positioned(
+                          child: Image.asset('images/talky.png'),
+                          top: 0,
+                          right: 0),
+                      Positioned(
+                          top: 10,
+                          right: 6,
+                          child: FutureBuilder<String>(
+                            future: _name,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              // ...
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                String data = snapshot.data ?? '';
+                                return Text(
+                                  'היי $data\n מה קורה?',
+                                  textDirection: TextDirection.rtl,
+                                  style: GoogleFonts.assistant(),
+                                );
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          )),
+                    ],
+                  ),
+                  Positioned(
+                      child: FutureBuilder<AvatarData>(
+                        future: _adata,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<AvatarData> snapshot) {
+                          // ...
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return AvatarStack(
+                                data: (snapshot.data ??
+                                    AvatarData(body: AvatarData.body_default)));
+                          }
+                          return CircularProgressIndicator();
+                        },
+                      )),
+                ])),
+            ListTile(
+              title: Text("עצב דמות",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Avatar(first: false, data: _adata)));
+              },
+            ),
+            ListTile(
+              title: Text("מפת דרכים",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Home()));
+              },
+            ),ListTile(
+              title: Text("שאלון יומי",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MyQuestions()));
+              },
+            ),
+            ListTile(
+              title: Text("התנתק",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => Login()));
+              },
+            ),
+          ]),
+        ),
         body: Stack(  children: [  Positioned(top:-150,child:
         Container(
           child: TweenAnimationBuilder<double>(
@@ -747,10 +2340,10 @@ class _MainState extends State<_Main> {
             children: [
               FlatButton(
                 color: Colors.transparent,
-                onPressed: () {},
+                onPressed:  () => scaffoldKey.currentState!.openDrawer(),
                 child: new IconTheme(
-                  data: new IconThemeData(size: 35, color: Color(0xff6f6ca7)),
-                  child: new Icon(Icons.menu),
+                  data: new IconThemeData(size: 35, color: Colors.black),
+                  child: new Icon(Icons.menu_rounded),
                 ),
               ),
               Align(

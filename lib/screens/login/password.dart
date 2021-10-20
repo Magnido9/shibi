@@ -81,7 +81,7 @@ class _MyHomePageState extends State<PasswordPage> {
                       Container(
                           height: MediaQuery.of(context).size.height * 0.1),
                       Text(
-                        "ציירי את הסיסמה שלך",
+                        "ציירו את הסיסמה שלכם",
                         textAlign: TextAlign.right,
                         style: GoogleFonts.assistant(
                           color: Colors.black,
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<PasswordPage> {
                       ),
                       Container(height: 10),
                       Text(
-                        ",בכדי שנוכל לשמור על פרטיותך \n    .צרי פאטרן על גבי העיגולים, בעזרתו תכנסי לשיבי",
+                        ",בכדי שנוכל לשמור על פרטיותכם \n    .צרו פאטרן על גבי העיגולים, בעזרתו תכנסו לשיבי",
                         textAlign: TextAlign.right,
                         style: GoogleFonts.assistant(
                           color: Colors.black,
