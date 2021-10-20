@@ -162,6 +162,7 @@ flutter:
     - images/staroff.png
     - images/expo/ppl.png
     - images/Shoola.png
+    - images/meditate9.png
 
     - music/meditation.mp3
   uses-material-design: true

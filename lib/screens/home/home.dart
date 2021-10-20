@@ -7,8 +7,10 @@ import 'package:application/screens/Avatar/give_money.dart';
 import 'package:application/screens/home/personal_diary.dart';
 import 'package:application/screens/home/psycho.dart';
 import 'package:application/screens/home/stars.dart';
+import 'package:application/screens/home/stars_explanation.dart';
 import 'package:application/screens/map/map.dart';
 import 'package:application/screens/map/meditation.dart';
+import 'package:application/screens/map/questioneer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -116,7 +118,7 @@ class _HomeState extends State<Home> {
     if (resets) {
       reset();
     }
-    medi = "תלחצו על הכפתור כדי להתחיל במדיטציה";
+    medi = "לחצו על הכפתור להתחלת תרגילי נשימה";
     medistage = 0;
     setState(() => timer?.cancel());
   }
@@ -130,18 +132,20 @@ class _HomeState extends State<Home> {
           children: [
             Text(
               medi,
+              textDirection: TextDirection.rtl,
               style: GoogleFonts.assistant(
                 color:Colors.white,
                   fontSize: 22, fontWeight: FontWeight.w900),
             ),
             SizedBox(
-              height: 80,
+              height: 10,
             ),
             buildTime(),
+            buildButtons(),
             SizedBox(
-              height: 80,
+              height: 10,
             ),
-            buildButtons()
+            Image.asset("images/meditate9.png")
           ],
         ),
       ),
@@ -793,89 +797,241 @@ Container(
     ]);
   }
 
-  Widget psychoBody() {
-    return Stack(children: <Widget>[
-      Positioned(
-          left: -((0.8125 * MediaQuery.of(context).size.height) -
-                  MediaQuery.of(context).size.width) /
-              4,
-          top: -0.2 * MediaQuery.of(context).size.height,
-          child: Container(
-              width: 0.8125 * MediaQuery.of(context).size.height,
-              height: 0.8125 * MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.pink,
-              ))),
-      Column(children: <Widget>[
-        Text(
-          "הנה מתקן חרדת חמודי עכשיו אין חרדה!",
-          textDirection: TextDirection.rtl,
-          textAlign: TextAlign.left,
-          style: GoogleFonts.assistant(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
-          child: ExpansionTile(
-            title: Text(
-              'חרדה',
-              style: GoogleFonts.assistant(fontSize: 12),
+  Widget psychoBody(_name) {
+
+
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    return Container(
+        height: height * 0.7,
+        width: width,
+        child: Stack(
+          children: [
+            Column(children: [
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Container(
+                    margin: EdgeInsets.fromLTRB(20, 20, 50, 5),
+                    child: nameIt(_name, Colors.white))
+              ]),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Container(
+                    margin: EdgeInsets.fromLTRB(20, 20, 50, 5),
+                    child: Text(
+                      'כוכבי הלכת האלו מכילים הסברים על החרדה שלכם ',
+                      textDirection: TextDirection.rtl,
+                      style: GoogleFonts.assistant(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white),
+                    ))
+              ]),
+              // width:MediaQuery.of(context).size.width,
+            ]),
+            Positioned(
+              right: 20,
+              top: height * 0.45,
+              child: GestureDetector(child:Container(
+                  height: 200,
+                  width: 200,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                          left: 5,
+                          child: Container(
+                            width: 165,
+                            height: 165,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x0c000000),
+                                  blurRadius: 18,
+                                  offset: Offset(0, -2),
+                                ),
+                              ],
+                              color: Color(0xfffaf5c6),
+                            ),
+                          )),
+                      Image.asset('images/Yellow_Star.png'),
+                      Positioned(
+                          child: Text(
+                            'מחשבות',
+                            style: GoogleFonts.assistant(),
+                          ),
+                          right: 85,
+                          top: 70),
+                    ],
+                  )),
+                onTap:() {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          StarsExp(cur_star:3)));
+                },
+              ),
             ),
-            children: <Widget>[
-              Text('זה חרדה'),
-              Text('אתה לא חרדה'),
-              Text('תיקנתי איש אתה'),
-            ],
-          ),
-        ),
-        Container(height: 10),
-        Stack(children: [
-          Container(
-              width: 200,
-              height: 39,
-              child: MaterialButton(
-                  onPressed: () {
-                    stopTimer();
-                  },
-                  minWidth: 200,
-                  height: 39,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(36)),
-                  color: Color(0xff35258a),
-                  child: Stack(children: <Widget>[
+            Positioned(
+                right: 120,
+                top: MediaQuery.of(context).size.height * 0.25,
+                child: GestureDetector(child:Stack(
+                  children: [
                     Positioned(
-                      top: 5,
-                      right: 50,
-                      child: Text(
-                        "הפסק!",
-                        textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.assistant(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+                        left: 5,
+                        child: Container(
+                          width: 98,
+                          height: 98,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x0c000000),
+                                blurRadius: 18,
+                                offset: Offset(0, -2),
+                              ),
+                            ],
+                            color: Color(0xffa9e1f4),
+                          ),
+                        )),
+                    Image.asset('images/Blue_Star.png'),
+                    Positioned(
+                        child: Text(
+                          'רגש',
+                          style: GoogleFonts.assistant(),
                         ),
-                      ),
-                    )
-                  ]))),
-          Positioned(
-              top: 5,
-              right: 165,
+                        right: 43,
+                        top: 35),
+                  ],
+                )
+                    ,onTap:() {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              StarsExp(cur_star:2)));
+                    })),
+            Positioned(
+                left: 25,
+                top: height * 0.25,
+                child: GestureDetector(child:Container(
+                    height: 100,
+                    width: 100,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                            left: 7,
+                            top: 7,
+                            child: Container(
+                              width: 74,
+                              height: 74,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x0c000000),
+                                    blurRadius: 18,
+                                    offset: Offset(0, -2),
+                                  ),
+                                ],
+                                color: Color(0xffefb3e2),
+                              ),
+                            )),
+                        Image.asset('images/Pink_Star.png'),
+                        Positioned(
+                            child: Text(
+                              'התנהגות',
+                              style: GoogleFonts.assistant(),
+                            ),
+                            right: 28,
+                            top: 32),
+                      ],
+                    )),  onTap:() {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          StarsExp(cur_star:0)));
+                })
+            ),
+            Positioned(
+                left: 50,
+                top: height * 0.4,
+                child: GestureDetector(child:Container(
+                    height: 150,
+                    width: 150,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                            left: 3,
+                            top: -1,
+                            child: Container(
+                              width: 132,
+                              height: 132,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x0c000000),
+                                    blurRadius: 18,
+                                    offset: Offset(0, -2),
+                                  ),
+                                ],
+                                color: Color(0xffc7f5e0),
+                              ),
+                            )),
+                        Image.asset('images/Green_Star.png'),
+                        Positioned(
+                            child: Text(
+                              'גוף',
+                              style: GoogleFonts.assistant(),
+                            ),
+                            right: 75,
+                            top: 55),
+                      ],
+                    )),
+                    onTap:() {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              StarsExp(cur_star:1)));
+                    })
+            ) /*Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                  // color: Colors.green,
+                  height: 500),
+              Container(
+                  // color: Colors.green,
+                  width: size.width * 0.5,
+                  height: size.height,
+                  child: FutureBuilder<AvatarData>(
+                    future: _adata,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<AvatarData> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        var data = snapshot.data ??
+                            AvatarData(body: AvatarData.body_default);
+                        return AvatarStack(data: data);
+                      }
+                      return CircularProgressIndicator();
+                    },
+                  )),
+            ])
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              flex: 1,
               child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(36),
-                    border: Border.all(color: Colors.white, width: 9),
-                  ))),
-        ])
-      ])
-    ]);
+                width: 100,
+                height: 100,
+                child: _TaskIcon(
+                  daily: true,
+                  text: 'test',
+                  slices: 5,
+                  complete: 3,
+                ),
+              ),
+            ),
+         */
+          ],
+        ));
+
+
   }
 
   @override
@@ -965,7 +1121,7 @@ Container(
                   : page_index == 1
                       ? diaryBody()
                       : page_index == 2
-                          ? psychoBody()
+                          ? psychoBody(_name)
                           : page_index == 3
                               ? medBody()
                               : homeBody(size, _name))
@@ -1033,7 +1189,7 @@ Container(
               },
             ),
             ListTile(
-              title: Text("מפה",
+              title: Text("מפת דרכים",
                   textDirection: TextDirection.rtl,
                   style: GoogleFonts.assistant()),
               onTap: () {
@@ -1043,7 +1199,20 @@ Container(
 
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        Money(to_give: 10, first: false)));
+                        Home()));
+              },
+            ),ListTile(
+              title: Text("שאלון יומי",
+                  textDirection: TextDirection.rtl,
+                  style: GoogleFonts.assistant()),
+              onTap: () {
+                Future<void> _signOut() async {
+                  await FirebaseAuth.instance.signOut();
+                }
+
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MyQuestions()));
               },
             ),
             ListTile(

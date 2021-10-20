@@ -1,4 +1,8 @@
 import 'dart:math';
+import 'package:application/services/auth_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../home/home.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +14,22 @@ class MyQuestions extends StatefulWidget {
 }
 
 class _MyQuestionsState extends State<MyQuestions> {
-  final _questions = const [
+  var moneyd;
+  @override
+  void initState() {
+    super.initState();
+    moneyd = loadMoney();
+  }
+  static Future<String> loadMoney() async {
+  String? pid = AuthRepository.instance().user?.uid;
+  var v =
+  (await FirebaseFirestore.instance.collection("avatars").doc(pid).get());
+  print('load');
+  var a = v['money'];
+  var s = a.toString();
+  print("ADADSDASD       " + a.toString());
+  return s;
+  }  final _questions = const [
     {
       'questionText': 'כשאני מפחד, קשה לי לנשום',
       'answers': [
@@ -74,23 +93,42 @@ class _MyQuestionsState extends State<MyQuestions> {
     return MaterialApp(
       theme: ThemeData(fontFamily: "Assistant"),
       home: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.deepPurple,
 
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          centerTitle: true,
-          title: Text(
-            "שאלון חרדה יומי",
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 30,
-              fontFamily: "Assistant",
-              fontWeight: FontWeight.w700,
+        appBar:  AppBar(
+            centerTitle: true,
+            title: Padding(
+              padding: EdgeInsets.only(top: 25.0),
+              child: Text(
+                "מפת דרכים",
+                //textAlign: TextAlign.center,
+                style: GoogleFonts.assistant(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-          ),
-          iconTheme: IconThemeData(color: Colors.black),
+            backgroundColor: Color(0xb2ffffff),
+            elevation: 0.0,
+            iconTheme: IconThemeData(color: Colors.black),
+            leading: Builder(
+              builder: (context) => GestureDetector(
+                  onTap: () => {
+                    if(_questionIndex>0)
+                      setState(() => { _questionIndex-=1})
+                  },
+                  child: Icon(Icons.arrow_back)),
+            ),
+            actions: <Widget>[
+              GestureDetector(
+              onTap: () => {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) => Home()))
+                  },
+                  child: Icon(Icons.home)),
+              ])
+         /* iconTheme: IconThemeData(color: Colors.black),
           leading: Builder(
             builder: (context) => GestureDetector(
                 onTap: () => {
@@ -98,9 +136,22 @@ class _MyQuestionsState extends State<MyQuestions> {
                           builder: (BuildContext context) => Home()))
                     },
                 child: Icon(Icons.arrow_back)),
-          ),
-        ),
-        body: Padding(
+          ),*/
+
+        ,body: Stack(children:[ Positioned(
+      left: -((1 * MediaQuery.of(context).size.height) -
+          MediaQuery.of(context).size.width) /
+        2,
+    top: -0.91 * MediaQuery.of(context).size.height,
+    child: Container(
+    width: 1 * MediaQuery.of(context).size.height,
+    height: 1 * MediaQuery.of(context).size.height,
+    decoration: BoxDecoration(
+    shape: BoxShape.circle,
+    color: Color(
+    0xb2ffffff,
+    ))),
+    ),Padding(
           padding: const EdgeInsets.all(30.0),
           child: _questionIndex < _questions.length
               ? Quiz(
@@ -109,7 +160,7 @@ class _MyQuestionsState extends State<MyQuestions> {
                   questions: _questions,
                 ) //Quiz
               : Result(_totalScore, _resetQuiz),
-        ), //Paddingk
+        ),]) //Paddingk
       ), //Scaffold
       debugShowCheckedModeBanner: false,
     ); //MaterialApp
@@ -134,19 +185,15 @@ class Quiz extends StatelessWidget {
         height: MediaQuery.of(context).size.height * 0.8,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: Color(0xff8ec3aa),
-            width: 9,
-          ),
+
         ),
         child: Column(
           children: [
             Text(
               ' שאלה ${(questionIndex + 1).toString()} מתוך ${questions.length.toString()}\n\n\n\n\n',
-              style: TextStyle(
+              style:  GoogleFonts.assistant(
                 color: Colors.black,
-                fontSize: 12,
-                fontFamily: "Assistant",
+                fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -176,10 +223,9 @@ class Question extends StatelessWidget {
       margin: EdgeInsets.all(10),
       child: Text(
         questionText + "\n\n",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-          fontFamily: "Assistant",
+        style: GoogleFonts.assistant(
+          color: Colors.white,
+          fontSize: 24,
           fontWeight: FontWeight.w700,
         ),
         textAlign: TextAlign.center,
@@ -199,14 +245,19 @@ class Answer extends StatelessWidget {
     return Container(
       //width: double.infinity,
       child: MaterialButton(
-        minWidth: 189,
+        minWidth: 300,
         height: 37,
+        elevation: 0,
+        disabledElevation: 0,
+        focusElevation: 0,
+        highlightElevation: 0,
+        hoverElevation: 0,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
             side: BorderSide(color: Color(0xff8ec3aa), width: 2)),
-        color: Colors.white,
+        color: Colors.deepPurple,
         splashColor: Colors.yellow[200],
-        textColor: Colors.black,
+        textColor: Colors.white,
         child: Text(answerText),
         onPressed: () {
           selectHandler();
@@ -251,10 +302,9 @@ class Result extends StatelessWidget {
           //Text
           Text(
             'תודה ששיתפת',
-            style: TextStyle(
-              color: Colors.black,
+            style:  GoogleFonts.assistant(
+              color: Colors.white,
               fontSize: 20,
-              fontFamily: "Assistant",
               fontWeight: FontWeight.w700,
             ),
             textAlign: TextAlign.center,
@@ -262,10 +312,9 @@ class Result extends StatelessWidget {
           FlatButton(
             child: Text(
               'חזור למסך הבית',
-              style: TextStyle(
+              style:  GoogleFonts.assistant(
                 color: Colors.blue,
                 fontSize: 14,
-                fontFamily: "Assistant",
                 fontWeight: FontWeight.w700,
               ),
             ), //Text

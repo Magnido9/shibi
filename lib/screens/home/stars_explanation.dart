@@ -18,6 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import '../Avatar/avatar.dart';
@@ -28,17 +29,17 @@ import '../login/login.dart';
 import '../../services/auth_services.dart';
 import 'home.dart';
 
-class Stars extends StatefulWidget {
-  Stars({required this.cur_star});
+class StarsExp extends StatefulWidget {
+  StarsExp({required this.cur_star});
   int cur_star;
   @override
-  StarsState createState() {
-    return new StarsState(cur_star: cur_star);
+  StarsExpState createState() {
+    return new StarsExpState(cur_star: cur_star);
   }
 }
 
-class StarsState extends State<Stars> {
-  StarsState({required this.cur_star});
+class StarsExpState extends State<StarsExp> {
+  StarsExpState({required this.cur_star});
   int cur_star;
   static Future<String> loadMoney() async {
     String? pid = AuthRepository.instance().user?.uid;
@@ -55,7 +56,7 @@ class StarsState extends State<Stars> {
   Future<String>? _name;
   var expos;
   var moneyd;
-  var _pageController;
+  var _pageController ;
 
   ValueNotifier<int> _currentPageNotifier = ValueNotifier<int>(0);
   Future<String> _getname() async {
@@ -231,7 +232,6 @@ class StarsState extends State<Stars> {
                               _currentPageNotifier.value = index;
                               setState(() {});
                             },
-
                             itemCount: 4,
                             controller: _pageController,
                             itemBuilder: (BuildContext context, int index) {
@@ -420,80 +420,12 @@ class StarsState extends State<Stars> {
 
 ExpoStars(int amount,expos,_adata,prevs,curr_page){
 
-  List<Widget> stars=[Container(width: 20)];
-  print(stars.length);
-  for(int i=prevs; i<amount+prevs;i++){
+  List<Widget> stars=[
+  Text("זה טקסט שמדבר על מחשבות וחרדה וכל הדברים\nזה טקסט שמדבר על מחשבות וחרדה וכל הדברים\nזה טקסט שמדבר על מחשבות וחרדה וכל הדברים\nזה טקסט שמדבר על מחשבות וחרדה וכל הדברים\n",
+    style:GoogleFonts.assistant(fontSize: 18, fontWeight: FontWeight.w500,color:Color(0xff35258A) ),)
 
-    stars.add(        FutureBuilder<dynamic>(
-        future: expos,
-        builder: (BuildContext context,
-            AsyncSnapshot<dynamic>
-            snapshot1) {
-          if (snapshot1.connectionState ==
-              ConnectionState.done) {
-
-            String data1;
-            if(i<snapshot1.data.length){data1=
-                snapshot1.data![i] ?? '';
-            print(data1);}
-            else{
-              return Image.asset(
-                  "images/staroff.png");
-            }
-            return FutureBuilder<
-                AvatarData>(
-              future: _adata,
-              builder:
-                  (BuildContext context,
-                  AsyncSnapshot<
-                      AvatarData>
-                  snapshot) {
-                if (snapshot
-                    .connectionState ==
-                    ConnectionState
-                        .done) {
-                  AvatarData data =
-                      snapshot.data ??
-                          AvatarData();
-                  return GestureDetector(
-                      onTap: () {
-                        Navigator.of(
-                            context)
-                            .pushReplacement(
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                (curr_page==0)?Expo1(
-                                      adata: data,
-                                      theCase: data1,
-                                    ):(curr_page==1)?BodyTools(
-                                  adata: data,
-                                  theCase: data1,
-                                ):(curr_page==2)?FeelingsTools(
-                                  adata: data,
-                                  theCase: data1,
-                                ):ThoughtsChallenge(
-                                  adata: data,
-                                  theCase: data1,
-                                )
-                            ));
-                      },
-                      child: Image.asset(
-                          "images/staron.png"));
-                }
-                return CircularProgressIndicator();
-              },
-            );
-          }
-          return CircularProgressIndicator();
-        })
-    );
-  }
-  stars.add(
-      Container(width: 20));
-  return Row(
-      mainAxisAlignment:
-      MainAxisAlignment.spaceEvenly,
-      children: stars);
+  ];
+    return Row(mainAxisAlignment:MainAxisAlignment.center,children:stars);
 }
 Widget build_money(String text) {
   return Stack(children: [
