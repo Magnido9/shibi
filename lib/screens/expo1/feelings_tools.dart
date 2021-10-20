@@ -33,8 +33,9 @@ import 'dart:math';
 import 'dart:async';
 
 class FeelingsTools extends StatelessWidget {
-  FeelingsTools({required this.adata, required this.theCase});
+  FeelingsTools({required this.adata, required this.theCase, required this.prev});
   final AvatarData adata;
+  final int prev;
   final String theCase;
   int fear = 0;
   @override
@@ -53,7 +54,7 @@ class FeelingsTools extends StatelessWidget {
         initialRoute: '/',
         routes: {
           // When navigating to the "/" route, build the FirstScreen widget.
-          '/': (context) => _Page1(),
+          '/': (context) => _Page1(prev:prev),
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/second': (context) => _Page2(),
           '/main': (context) => _Main(),
@@ -69,11 +70,14 @@ class FeelingsTools extends StatelessWidget {
 }
 
 class _Page1 extends StatefulWidget {
+  _Page1({required this.prev});
+  final int prev;
   @override
   _Page1State createState() => _Page1State();
 }
 
 class _Page1State extends State<_Page1> {
+
   double feeling = 0;
 
   Future<AvatarData>? _adata;
@@ -221,7 +225,14 @@ class _Page1State extends State<_Page1> {
               disabledElevation: 0,
               backgroundColor: Colors.grey.shade400,
               onPressed: () {
-                Navigator.pushNamed(context,'/tools');
+                if(this.widget.prev==1)
+                  Navigator.pushNamed(context,'/tools');
+                else
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                builder: (context) => Home()),
+                );
               },
               child: Icon(Icons.arrow_forward),
             ),

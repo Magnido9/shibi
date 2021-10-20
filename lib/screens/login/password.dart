@@ -134,6 +134,7 @@ class _MyHomePageState extends State<PasswordPage> {
                         },
                       ),
                       Container(height: 20),
+                      widget.first?
                       Center(
                           child: Stack(children: [
                         Container(
@@ -185,7 +186,7 @@ class _MyHomePageState extends State<PasswordPage> {
                                   border:
                                       Border.all(color: Colors.white, width: 9),
                                 ))),
-                      ])),
+                      ])):Container(),
                     ],
                   ))),
           Container(
@@ -243,6 +244,7 @@ class _MyHomePageState extends State<PasswordPage> {
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } else {
       final snackBar = SnackBar(
+        duration: Duration(seconds:1),
         content: const Text('Wrong Password'),
       );
 

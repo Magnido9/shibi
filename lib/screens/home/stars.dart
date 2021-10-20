@@ -14,6 +14,7 @@ import 'package:application/screens/home/psycho.dart';
 import 'package:application/screens/login/homescreen.dart';
 import 'package:application/screens/map/map.dart';
 import 'package:application/screens/map/meditation.dart';
+import 'package:application/screens/map/questioneer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -44,10 +45,8 @@ class StarsState extends State<Stars> {
     String? pid = AuthRepository.instance().user?.uid;
     var v =
         (await FirebaseFirestore.instance.collection("avatars").doc(pid).get());
-    print('load');
     var a = v['money'];
     var s = a.toString();
-    print("ADADSDASD       " + a.toString());
     return s;
   }
   bool first=true;
@@ -63,25 +62,21 @@ class StarsState extends State<Stars> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
 
   Future<List<dynamic>> _getExpos() async {
-    print("sadsadas THE EXPOS:------------------------");
     var name = (await FirebaseFirestore.instance
         .collection("expos")
         .doc(AuthRepository.instance().user?.uid)
         .get());
 
-    print(name['tasks']);
     return name['tasks'];
   }
  int page=0;
   List<Color> colors=[Color(0xffEEDBEA),Color(0xffC7F5E1),Color(0xffA9E1F4),Color(0xffFBF6C6)];
   Color _chooseColor() {
     int i = geti();
-    print("iiiiiiiiiiiiiiiiiiii             "+i.toString());
     if (i == 0) return Color(0xffEEDBEA);
     if (i == 1) return Color(0xffC7F5E1);
     if (i == 2)
@@ -135,11 +130,6 @@ class StarsState extends State<Stars> {
   Color background=Colors.white;
   @override
   Widget build(BuildContext context) {
-    /*GestureDetector(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Icon(Icons.menu))*/
 
     var x = min(
         MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
@@ -190,7 +180,6 @@ class StarsState extends State<Stars> {
                       // ...
                       if (snapshot.connectionState == ConnectionState.done) {
                         String data = snapshot.data ?? '';
-                        print("datata:" + data);
                         return build_money(data);
                       }
                       return CircularProgressIndicator();
@@ -199,7 +188,7 @@ class StarsState extends State<Stars> {
                 )),
           ]),
       backgroundColor: Colors.deepPurple,
-      body: Stack(
+      body: Container(child:Stack(
         children: [
           Positioned(
             left: -((1 * MediaQuery.of(context).size.height) -
@@ -237,7 +226,6 @@ class StarsState extends State<Stars> {
                           child: PageView(
                             scrollDirection: Axis.horizontal,
                             onPageChanged: (int index) {
-                              print("DAsdsadfaswf:::::::::::::"+index.toString());
                               if(first)
                                 first=false;
 
@@ -340,6 +328,7 @@ class StarsState extends State<Stars> {
               bottom: 10,
               left: 0)
         ],
+      ),width: width,height:height
       ),
       drawer: Drawer(
         child: ListView(padding: EdgeInsets.zero, children: [
@@ -402,17 +391,21 @@ class StarsState extends State<Stars> {
             },
           ),
           ListTile(
-            title: Text("מפה",
+            title: Text("מפת דרכים",
                 textDirection: TextDirection.rtl,
                 style: GoogleFonts.assistant()),
             onTap: () {
-              Future<void> _signOut() async {
-                await FirebaseAuth.instance.signOut();
-              }
-
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      Money(to_give: 10, first: false)));
+                  builder: (BuildContext context) => Home()));
+            },
+          ),
+          ListTile(
+            title: Text("שאלון יומי",
+                textDirection: TextDirection.rtl,
+                style: GoogleFonts.assistant()),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) => MyQuestions()));
             },
           ),
           ListTile(
@@ -427,17 +420,18 @@ class StarsState extends State<Stars> {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (BuildContext context) => Login()));
             },
-          ),
+          )
         ]),
       ),
     );
   }
 }
+_getRequests()async{
 
+}
 ExpoStars(int amount,expos,_adata,prevs,curr_page){
 
   List<Widget> stars=[Container(width: 20)];
-  print(stars.length);
   for(int i=prevs; i<amount+prevs;i++){
 
     stars.add(        FutureBuilder<dynamic>(
@@ -451,7 +445,7 @@ ExpoStars(int amount,expos,_adata,prevs,curr_page){
             String data1;
             if(i<snapshot1.data.length){data1=
                 snapshot1.data![i] ?? '';
-            print(data1);}
+            }
             else{
               return Image.asset(
                   "images/staroff.png");
@@ -476,22 +470,24 @@ ExpoStars(int amount,expos,_adata,prevs,curr_page){
                         Navigator.of(
                             context)
                             .pushReplacement(
-                            MaterialPageRoute(
+                            new MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                (curr_page==0)?Expo1(
+                                (curr_page==0)?new Expo1(
                                       adata: data,
                                       theCase: data1,
-                                    ):(curr_page==1)?BodyTools(
+                                    ):(curr_page==1)? new BodyTools(
+                                  adata: data,
+                                  theCase: data1,prev:0
+                                ):(curr_page==2)?new FeelingsTools(
                                   adata: data,
                                   theCase: data1,
-                                ):(curr_page==2)?FeelingsTools(
-                                  adata: data,
-                                  theCase: data1,
-                                ):ThoughtsChallenge(
+                                  prev:0
+                                ):new ThoughtsChallenge(prev:0,
                                   adata: data,
                                   theCase: data1,
                                 )
-                            ));
+                            ,),)
+                            .then((val)=>val?_getRequests():null);
                       },
                       child: Image.asset(
                           "images/staron.png"));

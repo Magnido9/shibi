@@ -26,12 +26,13 @@ import 'dart:math';
 import 'dart:async';
 
 class BodyTools extends StatelessWidget {
-  BodyTools({required this.adata, required this.theCase});
+  BodyTools({required this.adata, required this.theCase,required this.prev});
+  final int prev;
   final AvatarData adata;
   final String theCase;
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return Scaffold(body:Provider(
       create: (context) => ExpoData(adata: adata, theCase: theCase, body_task: 0, feelings_task: 0, thoughts_task: 0),
       child: MaterialApp(
         title: 'חשיפה 1',
@@ -40,7 +41,7 @@ class BodyTools extends StatelessWidget {
         initialRoute: '/',
         routes: {
           // When navigating to the "/" route, build the FirstScreen widget.
-          '/': (context) => _Page1(),
+          '/': (context) => _Page1(prev:prev,adata:adata,theCase:theCase),
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/second': (context) => _Page2(),
           // When navigating to the "/second" route, build the SecondScreen widget.
@@ -56,12 +57,16 @@ class BodyTools extends StatelessWidget {
           '/body/1' : (context) => body1_1() ,
           '/tools': (context) => tools(theCase: theCase,adata: adata),
         },
-      ),
+      ),)
     );
   }
 }
 
 class _Page1 extends StatefulWidget {
+  _Page1({required this.adata, required this.theCase,required this.prev});
+  final int prev;
+  final AvatarData adata;
+  final String theCase;
   @override
   _Page1State createState() => _Page1State();
 }
@@ -82,7 +87,6 @@ class _Page1State extends State<_Page1> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -214,7 +218,9 @@ class _Page1State extends State<_Page1> {
             disabledElevation: 0,
             backgroundColor: Colors.grey.shade400,
             onPressed: () {
-              Navigator.pushNamed(context,'/tools');
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                     this.widget.prev==0?Home():tools(adata:this.widget.adata, theCase:this.widget.theCase)));
             },
             child: Icon(Icons.arrow_forward),
           ),
@@ -656,7 +662,6 @@ class _Page2State extends State<_Page2> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -706,7 +711,7 @@ class _Page2State extends State<_Page2> {
   }
   void _stopFile() {
     stopTimer();
-    music?.pause(); // stop the file like this
+    music.pause(); // stop the file like this
   }
   @override
   Widget build(BuildContext context) {
@@ -962,7 +967,6 @@ setState(() {
                               onChanged: (double value) {
                                 setState(() {
                                   value = value;
-                                  print(value);
                                 });})
                               ,data:SliderTheme.of(context).copyWith(
 
@@ -1050,7 +1054,6 @@ class _Page3State extends State<_Page3> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -1100,7 +1103,7 @@ class _Page3State extends State<_Page3> {
   }
   void _stopFile() {
     stopTimer();
-    music?.pause(); // stop the file like this
+    music.pause(); // stop the file like this
   }
   @override
   Widget build(BuildContext context) {
@@ -1356,7 +1359,6 @@ class _Page3State extends State<_Page3> {
                                           onChanged: (double value) {
                                             setState(() {
                                               value = value;
-                                              print(value);
                                             });})
                                       ,data:SliderTheme.of(context).copyWith(
 
@@ -1444,7 +1446,6 @@ class _Page4State extends State<_Page4> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -1494,7 +1495,7 @@ class _Page4State extends State<_Page4> {
   }
   void _stopFile() {
     stopTimer();
-    music?.pause(); // stop the file like this
+    music.pause(); // stop the file like this
   }
   @override
   Widget build(BuildContext context) {
@@ -1750,7 +1751,6 @@ class _Page4State extends State<_Page4> {
                                           onChanged: (double value) {
                                             setState(() {
                                               value = value;
-                                              print(value);
                                             });})
                                       ,data:SliderTheme.of(context).copyWith(
 
@@ -1838,7 +1838,6 @@ class _Page5State extends State<_Page5> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -1888,7 +1887,7 @@ class _Page5State extends State<_Page5> {
   }
   void _stopFile() {
     stopTimer();
-    music?.pause(); // stop the file like this
+    music.pause(); // stop the file like this
   }
   @override
   Widget build(BuildContext context) {
@@ -2144,7 +2143,6 @@ class _Page5State extends State<_Page5> {
                                           onChanged: (double value) {
                                             setState(() {
                                               value = value;
-                                              print(value);
                                             });})
                                       ,data:SliderTheme.of(context).copyWith(
 
@@ -2192,7 +2190,6 @@ class _MainState extends State<_Main> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -2200,7 +2197,6 @@ class _MainState extends State<_Main> {
 
   @override
   Widget build(BuildContext context) {
-    print('main');
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -2468,7 +2464,6 @@ class _MainState extends State<_Main> {
                   width: (choose == -1) ? width : width * percent,
                   child: Consumer<ExpoData>(
                     builder: (context, data, w) {
-                      print(data.done);
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

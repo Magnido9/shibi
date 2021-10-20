@@ -35,7 +35,8 @@ import 'dart:math';
 import 'dart:async';
 
 class ThoughtsChallenge extends StatelessWidget {
-  ThoughtsChallenge({required this.adata, required this.theCase});
+  ThoughtsChallenge({required this.adata, required this.theCase,required this.prev});
+  final int prev;
   final AvatarData adata;
   final String theCase;
   int fear = 0;
@@ -55,7 +56,7 @@ class ThoughtsChallenge extends StatelessWidget {
         initialRoute: '/',
         routes: {
           // When navigating to the "/" route, build the FirstScreen widget.
-          '/': (context) => _Page1(on: [true,true,true],),
+          '/': (context) => _Page1(on: [true,true,true],prev:prev),
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/second': (context) => _Page2(),
           '/main': (context) => _Main(),
@@ -72,9 +73,9 @@ class ThoughtsChallenge extends StatelessWidget {
 }
 
 class _Page1 extends StatefulWidget {
-
+  final int prev;
   List<bool> on=[true,true,true];
-  _Page1({required this.on});
+  _Page1({required this.on,required this.prev});
   @override
   _Page1State createState() => _Page1State(on:on);
 }
@@ -353,7 +354,15 @@ class _Page1State extends State<_Page1> {
               disabledElevation: 0,
               backgroundColor: Colors.grey.shade400,
               onPressed: () {
-                Navigator.pushNamed(context, '/tools');
+                if(this.widget.prev==1)
+                  Navigator.pushNamed(context, '/tools');
+                else
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Home()),
+                );
+
               },
               child: Icon(Icons.arrow_forward),
             ),
@@ -377,7 +386,7 @@ class _Page1State extends State<_Page1> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "     הרפיית מחשבות",
+                  "     אתגור מחשבות",
                   //textAlign: TextAlign.center,
                   style: GoogleFonts.assistant(
                     color: Colors.black,
@@ -2041,7 +2050,7 @@ class _baboomState extends State<_BaboomPage> {
     setState(() {
                               Navigator.of(context).pushReplacement(MaterialPageRoute(
     builder: (BuildContext context) =>
-    _Page1(on: t)));
+    _Page1(on: t,prev:1)));
     }); });
                           return  Positioned(
                             top: 80,

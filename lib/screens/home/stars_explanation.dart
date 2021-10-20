@@ -14,6 +14,7 @@ import 'package:application/screens/home/psycho.dart';
 import 'package:application/screens/login/homescreen.dart';
 import 'package:application/screens/map/map.dart';
 import 'package:application/screens/map/meditation.dart';
+import 'package:application/screens/map/questioneer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -375,42 +376,46 @@ class StarsExpState extends State<StarsExp> {
                   },
                 )),
               ])),
-          ListTile(
-            title: Text("עצב דמות",
-                textDirection: TextDirection.rtl,
-                style: GoogleFonts.assistant()),
-            onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      Avatar(first: false, data: _adata)));
-            },
-          ),
-          ListTile(
-            title: Text("מפה",
-                textDirection: TextDirection.rtl,
-                style: GoogleFonts.assistant()),
-            onTap: () {
-              Future<void> _signOut() async {
-                await FirebaseAuth.instance.signOut();
-              }
+        ListTile(
+          title: Text("עצב דמות",
+              textDirection: TextDirection.rtl,
+              style: GoogleFonts.assistant()),
+          onTap: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    Avatar(first: false, data: _adata)));
+          },
+        ),
+        ListTile(
+          title: Text("מפת דרכים",
+              textDirection: TextDirection.rtl,
+              style: GoogleFonts.assistant()),
+          onTap: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => Home()));
+          },
+        ),
+        ListTile(
+          title: Text("שאלון יומי",
+              textDirection: TextDirection.rtl,
+              style: GoogleFonts.assistant()),
+          onTap: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => MyQuestions()));
+          },
+        ),
+        ListTile(
+          title: Text("התנתק",
+              textDirection: TextDirection.rtl,
+              style: GoogleFonts.assistant()),
+          onTap: () {
+            Future<void> _signOut() async {
+              await FirebaseAuth.instance.signOut();
+            }
 
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      Money(to_give: 10, first: false)));
-            },
-          ),
-          ListTile(
-            title: Text("התנתק",
-                textDirection: TextDirection.rtl,
-                style: GoogleFonts.assistant()),
-            onTap: () {
-              Future<void> _signOut() async {
-                await FirebaseAuth.instance.signOut();
-              }
-
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) => Login()));
-            },
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => Login()));
+          },
           ),
         ]),
       ),

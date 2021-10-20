@@ -254,7 +254,7 @@ class _tools_state extends State<tools> {
                                 //
                                 TextSpan(
                                     text:
-                                    'עוד לא הוכנס מלל.\n'),
+                                    'כאן אתם יכולים לבחור בכלים של הרפיית רגשות, הרפיית גוף או אתגור מחשב.\n'),
 
                               ],
                             ),
@@ -280,7 +280,7 @@ class _tools_state extends State<tools> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "באיזה כלי תרצי לבחור?",
+                      "באיזה כלי תרצו לבחור?",
                       textDirection: TextDirection.rtl,
                       textAlign: TextAlign.right,
                       style: GoogleFonts.assistant(
@@ -293,7 +293,7 @@ class _tools_state extends State<tools> {
                       height: 5,
                     ),
                     Text(
-                      "בחרי בכלי שיסייע להקל על החרדה שלך.",
+                      "בחרו בכלי שיסייע להקל על החרדה שלך.",
                       textDirection: TextDirection.rtl,
                       textAlign: TextAlign.right,
                       style: GoogleFonts.assistant(
@@ -433,13 +433,13 @@ class _tools_state extends State<tools> {
           onPressed: () async {
             if (choose == 2) {
               await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) =>ThoughtsChallenge(adata:adata ,theCase: theCase)));
+                  builder: (BuildContext context) =>ThoughtsChallenge(adata:adata ,theCase: theCase,prev:1)));
             } else if (choose == 0) {
               await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) =>BodyTools(adata:adata ,theCase: theCase)));
+                  builder: (BuildContext context) =>BodyTools(adata:adata ,theCase: theCase, prev:1)));
             } else if (choose == 1) {
               await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) =>FeelingsTools(adata:adata ,theCase: theCase)));
+                  builder: (BuildContext context) =>FeelingsTools(adata:adata ,theCase: theCase,prev:1)));
             }
             setState(() {
               choose = -1;
@@ -449,6 +449,9 @@ class _tools_state extends State<tools> {
       ],
     ):Container()
     ),
+
+
+          (choose != -1)?Positioned(bottom:0,right:0,child:Image.asset((choose==0)?"images/CoolBoi.png":(choose==1)?"images/skater.png":"images/MiniMedi.png")):Container()
         ])
 
     );

@@ -76,7 +76,6 @@ class _Page1State extends State<_Page1> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -367,7 +366,6 @@ class _Page2State extends State<_Page2> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -656,12 +654,10 @@ class _Page2State extends State<_Page2> {
 
                   return Container(
                     height:210,
-                    width:210,child:Flexible(
-                    flex: 1,
-                    child:AvatarStack(data: x),
-          fit: FlexFit.tight,
+                    width:210, child:AvatarStack(data: x),
+
                     // child: AvatarStack(data: AvatarData()),
-                  ));
+                  );
                 },
               ),
               Container(
@@ -780,14 +776,12 @@ class _MainState extends State<_Main> {
         .collection("users")
         .doc(AuthRepository.instance().user?.uid)
         .get())['name'];
-    print(name);
     return name;
   }
   var scaffoldKey = GlobalKey<ScaffoldState>();
   int choose = -1;
   @override
   Widget build(BuildContext context) {
-    print('main');
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -1079,7 +1073,6 @@ class _MainState extends State<_Main> {
                   width: (choose == -1) ? width : width * percent,
                   child: Consumer<ExpoData>(
                     builder: (context, data, w) {
-                      print(data.done);
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
