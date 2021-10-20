@@ -12,6 +12,7 @@ import 'package:application/screens/map/meditation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Avatar/avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -121,19 +122,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget medBody() {
-    return Stack(children: [
-      Positioned(
-          left: -((0.8125 * MediaQuery.of(context).size.height) -
-                  MediaQuery.of(context).size.width) /
-              2,
-          top: 0 * MediaQuery.of(context).size.height,
-          child: Container(
-              width: 0.8125 * MediaQuery.of(context).size.height,
-              height: 0.8125 * MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.orangeAccent,
-              ))),
+    return Container(height:MediaQuery.of(context).size.height*0.7,child:Stack(children: [
+
       Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -141,6 +131,7 @@ class _HomeState extends State<Home> {
             Text(
               medi,
               style: GoogleFonts.assistant(
+                color:Colors.white,
                   fontSize: 22, fontWeight: FontWeight.w900),
             ),
             SizedBox(
@@ -154,7 +145,9 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-    ]);
+
+
+        ]));
   }
 
   Widget buildTime() {
@@ -283,7 +276,8 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(36),
                       border: Border.all(color: Colors.white, width: 9),
                     ))),
-          ]);
+
+    ]);
   }
 
   Widget homeBody(size, _name) {
@@ -520,77 +514,282 @@ class _HomeState extends State<Home> {
   }
 
   Widget diaryBody() {
-    return Stack(children: <Widget>[
-      Positioned(
-          left: -((0.8125 * MediaQuery.of(context).size.height) -
-                  MediaQuery.of(context).size.width) /
-              4,
-          top: -0.2 * MediaQuery.of(context).size.height,
-          child: Container(
-              width: 0.8125 * MediaQuery.of(context).size.height,
-              height: 0.8125 * MediaQuery.of(context).size.height,
+    var height= MediaQuery.of(context).size.height;
+    var width= MediaQuery.of(context).size.width;
+    TextEditingController? _controller= TextEditingController(text: "");
+    return Stack(children: <Widget>[ Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            child: Container(
+              child: Center(
+                child: Text(
+                  '?',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              width: 26,
+              height: 26,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.pink,
-              ))),
-      Column(children: <Widget>[
-        Text(
-          "הנה יומן חמודי עכשיו תכתוב!",
-          textDirection: TextDirection.rtl,
-          textAlign: TextAlign.left,
-          style: GoogleFonts.assistant(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        TextField(
-          textDirection: TextDirection.rtl,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-        ),
-        Container(height: 10),
-        Stack(children: [
-          Container(
-              width: 200,
-              height: 39,
-              child: MaterialButton(
-                  onPressed: () {
-                    stopTimer();
-                  },
-                  minWidth: 200,
-                  height: 39,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(36)),
-                  color: Color(0xff35258a),
-                  child: Stack(children: <Widget>[
-                    Positioned(
-                      top: 5,
-                      right: 50,
-                      child: Text(
-                        "הפסק!",
+                shape: BoxShape.circle,//3
+                color: Color(0xffc4c4c4),
+              ),
+            ),
+            onTap: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) =>
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child:
+                    AlertDialog(
+                      backgroundColor: Color(0xffECECEC),
+                      content: RichText(
                         textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.assistant(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+                        text: TextSpan(
+                          style: GoogleFonts.assistant(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                          children: <TextSpan>[
+                            //
+                            TextSpan(
+                                text:
+                                'זה היומן האישי שלכם, כל מה שתכתבו כאן אישי לכם ואף אדם אחר לא יוכל לראות אותו.\n'),
+
+                          ],
                         ),
                       ),
-                    )
-                  ]))),
-          Positioned(
-              top: 5,
-              right: 165,
-              child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(36),
-                    border: Border.all(color: Colors.white, width: 9),
-                  ))),
-        ])
-      ])
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text(
+                            'x',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ],
+                    ),),
+            ),
+          ),
+          Container(
+              width:30
+          ),
+          Container(
+            margin: EdgeInsets.only(right: 20, left: 20, bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  "היומן האישי שלך",
+                  textDirection: TextDirection.rtl,
+                  textAlign: TextAlign.right,
+                  style: GoogleFonts.assistant(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Container(
+                  height: 5,
+                ),
+                Text(
+                  "אתם יכולים לכתוב כאן כל מה שעל ליבכם",
+                  textAlign: TextAlign.right,
+                  style: GoogleFonts.assistant(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+              width:20
+          ),
+        ]),Column(children: [Container(height:70),
+Container(
+      width: 370,
+      height: height*0.6 ,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(31),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x3f000000),
+            blurRadius: 7,
+            offset: Offset(0, 2),
+          ),
+        ],
+        color: Color(0xffe0dfd9),
+      ),
+      child: Stack(children: [Column(children: [
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+        Container(height: 42),
+        Container(
+          width: 360,
+          height: 2,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(0x2d34248a),
+              width: 1,
+            ),
+          ),
+        ),
+
+      ],),
+        Positioned(
+            top: -10,
+            right: 0,
+            left: 0,
+            child: TextFormField(
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                height: 2.25,
+                fontFamily: "Assistant",
+                fontWeight: FontWeight.w300,
+              ),
+              decoration: InputDecoration(
+                hintText: '',
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+              ),
+              textDirection: TextDirection.rtl,
+              controller: _controller,
+              maxLines: 11,
+            )),
+
+      ]),
+
+      /*Container(
+                child: Text
+                  (
+                  "0                                                   100",
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontFamily: "Assistant",
+                    //fontWeight: FontWeight.w700,
+                  ),
+                ),
+
+              ),*/
+    )],)
     ]);
   }
 
