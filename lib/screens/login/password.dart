@@ -56,17 +56,7 @@ class _MyHomePageState extends State<PasswordPage> {
     return Scaffold(
       body: Stack(
         children: [
-          Align(
-            alignment: FractionalOffset.bottomLeft,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.2,
-              padding: EdgeInsets.only(left: 20),
-              child: FittedBox(
-                child: Image.asset('images/shibi_pages/'+((codes.isEmpty)? 'clean' : 'dirty')+'.png'),
-                fit: BoxFit.fitHeight,
-              ),
-            ),
-          ),
+          Positioned(left: 10 ,bottom:0,child:Image.asset('images/shibi_pages/'+((codes.isEmpty)? 'clean' : 'dirty')+'.png')),
           CustomPaint(
             painter: _Painter(),
             size: MediaQuery.of(context).size,

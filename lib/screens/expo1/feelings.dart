@@ -143,33 +143,31 @@ class _feeling1_state extends State<feeling1_1> {
     }
   }
 
+  Future<AvatarData>? _adata;
+  Future<String>? _name;
+  @override
+  void initState() {
+    super.initState();
+    _adata = AvatarData.load();
+    _name = _getname();
+  }
+
+  Future<String> _getname() async {
+    var name = (await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AuthRepository.instance().user?.uid)
+        .get())['name'];
+    print(name);
+    return name;
+  }
+  var scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
-    Future<String> _getname() async {
-      var name = (await FirebaseFirestore.instance
-          .collection("users")
-          .doc(AuthRepository.instance().user?.uid)
-          .get())['name'];
-      print(name);
-      return name;
-    }
-    Future<AvatarData>? _adata;
-    Future<String>? _name;
-    @override
-    void initState() {
-      super.initState();
-      _adata = AvatarData.load();
-      _name = _getname();
-    }
-
-    var scaffoldKey = GlobalKey<ScaffoldState>();
-    /**/
-
-    return Scaffold(key: scaffoldKey,
-      drawer: Drawer(
+    return Scaffold(
+      key:scaffoldKey,
+      drawer:Drawer(
         child: ListView(padding: EdgeInsets.zero, children: [
           DrawerHeader(
               decoration: BoxDecoration(
@@ -234,20 +232,17 @@ class _feeling1_state extends State<feeling1_1> {
                 textDirection: TextDirection.rtl,
                 style: GoogleFonts.assistant()),
             onTap: () {
-
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      Home()));
+                  builder: (BuildContext context) => Home()));
             },
-          ),ListTile(
+          ),
+          ListTile(
             title: Text("שאלון יומי",
                 textDirection: TextDirection.rtl,
                 style: GoogleFonts.assistant()),
             onTap: () {
-
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      MyQuestions()));
+                  builder: (BuildContext context) => MyQuestions()));
             },
           ),
           ListTile(
@@ -268,13 +263,13 @@ class _feeling1_state extends State<feeling1_1> {
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            _getColor(),
-            Colors.white,
-          ],
-        )),
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                _getColor(),
+                Colors.white,
+              ],
+            )),
         child: Stack(
           children: [
 
@@ -316,22 +311,22 @@ class _feeling1_state extends State<feeling1_1> {
               ),
             ),
             Positioned(
-                top:95,
-                left: 20,
+              top:100,
+              left: 20,
               child:
-            Container(
-              padding: EdgeInsets.all(5),
-              child: FittedBox(
-                fit: BoxFit.fitHeight,
-                child: Image.asset('images/expo/smile.png',
-                    color: Color(0xffB3E8EF)),
+              Container(
+                padding: EdgeInsets.all(5),
+                child: FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Image.asset('images/expo/smile.png',
+                      color: Color(0xffB3E8EF)),
+                ),
+                width: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xff35258A),
+                ),
               ),
-              width: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xff35258A),
-              ),
-            ),
             ),
 
             Column(
@@ -401,7 +396,7 @@ class _feeling1_state extends State<feeling1_1> {
                                     style: GoogleFonts.assistant(
                                       color: Colors.black,
                                       fontSize: 18,
-                                    ),//2
+                                    ),
                                     children: <TextSpan>[
                                       //
                                       TextSpan(
@@ -430,7 +425,7 @@ class _feeling1_state extends State<feeling1_1> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "בואי נזהה יחד את הרגשות המוצפים.",
+                            "בואו נזהה יחד את הרגשות המוצפים.",
                             textDirection: TextDirection.rtl,
                             textAlign: TextAlign.right,
                             style: TextStyle(
@@ -570,33 +565,33 @@ class _feeling1_state extends State<feeling1_1> {
                 ),
                 Container(
                   width: 30340304,
-                    margin: EdgeInsets.only(left: 40, right: 40, bottom: 20),
+                  margin: EdgeInsets.only(left: 40, right: 40, bottom: 20),
 
-                    child: SliderTheme(
-                        data: SliderThemeData(
-                          thumbColor: Color(0xffFFFFFF).withOpacity(0.8),
-                          //thumbColor: Colors.black,
-                          activeTrackColor: _getColor(),
-
-
-                        ),
+                  child: SliderTheme(
+                      data: SliderThemeData(
+                        thumbColor: Color(0xffFFFFFF).withOpacity(0.8),
+                        //thumbColor: Colors.black,
+                        activeTrackColor: _getColor(),
 
 
-                        child: Slider(
-                      //activeColor: _getColor(),
-                      //thumbColor: Colors.grey,
-                      value: pointer,
-                      min: 0,
-                      max: 100,
-                      divisions: 100,
-                      label: _label(),
-                      onChanged: (double value) {
-                        setState(() {
-                          pointer = value;
-                          _controller.jumpTo(value / 100 * width * 4.5);
-                        });
-                      },
-                    )),),
+                      ),
+
+
+                      child: Slider(
+                        //activeColor: _getColor(),
+                        //thumbColor: Colors.grey,
+                        value: pointer,
+                        min: 0,
+                        max: 100,
+                        divisions: 100,
+                        label: _label(),
+                        onChanged: (double value) {
+                          setState(() {
+                            pointer = value;
+                            _controller.jumpTo(value / 100 * width * 4.5);
+                          });
+                        },
+                      )),),
               ],
             ),
             if (Provider.of<ExpoData>(context, listen: false).felt.length >= 3)
@@ -636,10 +631,10 @@ class _feeling1_state extends State<feeling1_1> {
 class _circle extends StatelessWidget {
   _circle(
       {required this.color,
-      this.text = "",
-      required this.radius,
-      this.onTap,
-      this.isChosen = false});
+        this.text = "",
+        required this.radius,
+        this.onTap,
+        this.isChosen = false});
   final double radius;
   final String text;
   final Color color;

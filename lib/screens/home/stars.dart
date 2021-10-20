@@ -121,7 +121,7 @@ class StarsState extends State<Stars> {
       background=colors[cur_star];
       page=cur_star;
     _pageController = PageController(initialPage: cur_star);
-
+    _currentPageNotifier = ValueNotifier<int>(cur_star);
     _adata = AvatarData.load();
     _name = _getname();
     moneyd = loadMoney();
@@ -288,12 +288,9 @@ class StarsState extends State<Stars> {
             left: width * 0.44,
             child: Container(
               height: 50,
+              width:50,
               padding: EdgeInsets.all(5),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
                 child: Image.asset(_chooseIcon(), color: Color(0xffB3E8EF)),
-              ),
-              width: 50,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Color(0xff35258A),
@@ -432,6 +429,7 @@ _getRequests()async{
 ExpoStars(int amount,expos,_adata,prevs,curr_page){
 
   List<Widget> stars=[Container(width: 20)];
+  var a=0;
   for(int i=prevs; i<amount+prevs;i++){
 
     stars.add(        FutureBuilder<dynamic>(
@@ -450,7 +448,7 @@ ExpoStars(int amount,expos,_adata,prevs,curr_page){
               return Image.asset(
                   "images/staroff.png");
             }
-            return FutureBuilder<
+            return Container(height:105,width:100,child:Stack(children:[FutureBuilder<
                 AvatarData>(
               future: _adata,
               builder:
@@ -494,7 +492,9 @@ ExpoStars(int amount,expos,_adata,prevs,curr_page){
                 }
                 return CircularProgressIndicator();
               },
-            );
+            ),
+          Positioned(top:85,left:17,child:(Text('חשיפה '+(i+1).toString(),style: GoogleFonts.assistant(),)))
+          ]));
           }
           return CircularProgressIndicator();
         })
