@@ -160,6 +160,8 @@ flutter:
     - images/coin.png
     - images/staron.png
     - images/staroff.png
+    - images/expo/ppl.png
+    - images/Shoola.png
 
     - music/meditation.mp3
   uses-material-design: true

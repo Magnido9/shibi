@@ -1,5 +1,6 @@
 library expo;
 
+import 'package:application/screens/Avatar/color_switch.dart';
 import 'package:application/screens/expo1/ToolsChoosing.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
@@ -181,12 +182,12 @@ class _Page1State extends State<_Page1> {
           left: 320,
           child: Container(
             padding: EdgeInsets.all(5),
+            width: 40,
             child: FittedBox(
               fit: BoxFit.fitHeight,
               child: Image.asset('images/expo/smile.png',
                   color: Color(0xffB3E8EF)),
             ),
-            width: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Color(0xff35258A),
@@ -1782,12 +1783,8 @@ class _baboomState extends State<_BaboomPage> {
                             left: -width * 0.1,
                             child: Container(
                                 width: width * 1.2,
-                                height: width * 1.12,
+                                height: width * 1.2,
                                 decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Color(0xff90c2ab),
-                                    width: 4,
-                                  ),
                                   shape: BoxShape.circle,
                                   color: colors[widget.color % 4],
                                 )),
@@ -1810,7 +1807,14 @@ class _baboomState extends State<_BaboomPage> {
                             child: Container(
                                 width: width * 1.2,
                                 height: width * 1.12,
-                                child:Image.asset('images/boom1.png')   ),
+                                child:ImageColorSwitcher(
+                                  height: width * 1.2,
+                                  width: width * 1.2,
+                                  imagePath: 'images/boom1.png',
+                                  main: Color(0xffB0D4B1),
+                                  second: Color(0xffB0D4B1),
+                                  color: colors[this.widget.color % 4],
+                                )   ),
                           )
                           ;
                         }):TweenAnimationBuilder(
@@ -1834,7 +1838,14 @@ class _baboomState extends State<_BaboomPage> {
                             child: Container(
                                 width: width * 1.2,
                                 height: width * 1.12,
-                            child:Image.asset('images/boom2.png')
+                            child:ImageColorSwitcher(
+                              height: width * 1.2,
+                              width: width * 1.2,
+                              imagePath: 'images/boom2.png',
+                              main: Color(0xffDFF3E2),
+                              second: Color(0xff90C2AB),
+                              color: colors[this.widget.color % 4],
+                            )
                             ),
                           )
                           ;

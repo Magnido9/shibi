@@ -304,7 +304,7 @@ class _HomeState extends State<Home> {
                 Container(
                     margin: EdgeInsets.fromLTRB(20, 20, 50, 5),
                     child: Text(
-                      'כוכבי הלעת יעזרו לכם להבין טוב יותר את החרדה,\n ולהבין באיזה כלים אתם בדרך כלל משתמשים, \nעל מנת שתוכלו להחזיק ולהשלים את ארגז הכלים שלכם ',
+                      'כוכבי הלכת יעזרו לכם להבין טוב יותר את החרדה,\n ולהבין באיזה כלים אתם בדרך כלל משתמשים, \nעל מנת שתוכלו להחזיק ולהשלים את ארגז הכלים שלכם ',
                       textDirection: TextDirection.rtl,
                       style: GoogleFonts.assistant(
                           fontSize: 14,
@@ -359,7 +359,7 @@ class _HomeState extends State<Home> {
             Positioned(
                 left: 70,
                 top: MediaQuery.of(context).size.height * 0.3,
-                child: Stack(
+                child: GestureDetector(child:Stack(
                   children: [
                     Positioned(
                         left: 5,
@@ -387,11 +387,16 @@ class _HomeState extends State<Home> {
                         right: 43,
                         top: 35),
                   ],
-                )),
+                )
+    ,onTap:() {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+    builder: (BuildContext context) =>
+    Stars(cur_star:2)));
+    })),
             Positioned(
               left: 5,
               top: height * 0.45,
-              child: Container(
+              child: GestureDetector(child:Container(
                   height: 100,
                   width: 100,
                   child: Stack(
@@ -423,12 +428,16 @@ class _HomeState extends State<Home> {
                           right: 28,
                           top: 32),
                     ],
-                  )),
+                  )),  onTap:() {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      Stars(cur_star:0)));
+            })
             ),
             Positioned(
               right: 150,
               top: height * 0.50,
-              child: Container(
+              child: GestureDetector(child:Container(
                   height: 150,
                   width: 150,
                   child: Stack(
@@ -461,6 +470,11 @@ class _HomeState extends State<Home> {
                           top: 55),
                     ],
                   )),
+                onTap:() {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          Stars(cur_star:1)));
+                })
             ) /*Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Container(
                   // color: Colors.green,

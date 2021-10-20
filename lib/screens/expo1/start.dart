@@ -1,4 +1,5 @@
 library expo;
+import 'package:application/screens/home/stars.dart';
 import 'package:tuple/tuple.dart';
 
 import 'package:application/screens/Avatar/avatar.dart';
@@ -90,7 +91,10 @@ class _Page1State extends State<_Page1> {
                 elevation: 0,
                 disabledElevation: 0,
                 backgroundColor: Colors.grey.shade400,
-                onPressed: () {},
+                onPressed: () { Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Stars(cur_star:0)));
+                },
                 child: Icon(Icons.arrow_forward),
               ),
               margin: EdgeInsets.all(30),
