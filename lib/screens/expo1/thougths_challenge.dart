@@ -418,7 +418,7 @@ class _Page1State extends State<_Page1> {
         Positioned(
             right: 10,
             left: 10,
-            top: height * 0.25,
+            top: height * 0.22,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,14 +470,14 @@ class _Page1State extends State<_Page1> {
                     ),
                   ),
                 ),
-                Container(width: 30),
+                Container(width: 0),
                 Container(
-                  margin: EdgeInsets.only(right: 10, left: 20, bottom: 10),
+                  margin: EdgeInsets.only(right: 10, left: 0, bottom: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        " זוכרים את המחשבות שבחרתם?",
+                        "זוכרים את המחשבות שבחרתם?",
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,
                         style: GoogleFonts.assistant(
@@ -487,7 +487,7 @@ class _Page1State extends State<_Page1> {
                         ),
                       ),
                       Text(
-                        " הם חזרו לנקמה",
+                        "בואו נאתגר אותן! בחרו בבלון שתרצו לאתגר.",
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,
                         style: GoogleFonts.assistant(
@@ -499,7 +499,6 @@ class _Page1State extends State<_Page1> {
                     ],
                   ),
                 ),
-                Container(width: 20),
               ],
             )),
         FutureBuilder(
@@ -1776,7 +1775,9 @@ class _ballonState extends State<_BallonPage> {
                                       BackdropFilter(
                                     filter:
                                         ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                                    child: AlertDialog(
+                                    child: Stack(children:[AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(36)),
                                       backgroundColor: Color(0xffECECEC),
                                       content: RichText(
                                         textDirection: TextDirection.rtl,
@@ -1788,21 +1789,27 @@ class _ballonState extends State<_BallonPage> {
                                           children: <TextSpan>[
                                             //
                                             TextSpan(
-                                                text: 'עוד לא הוכנס מלל.\n'),
+                                                text: 'חשיבה מסוג הכל או כלום, היא חשיבה קיצונית- שחור לבן. לא גווני אפור או פשרות\n\n שחור לדוגמא- "אם אכשל במבחן הזה זה אומר שאני טיפשה". \n\n באתגור הזה עלייכם למצוא את הגוון האפור שבמחשבה\nלדוגמא- "אם אכשל במבחן כנראה שהפעם לא למדתי מספיק"'),
                                           ],
                                         ),
                                       ),
                                       actions: <Widget>[
-                                        TextButton(
+                                        /*TextButton(
                                           onPressed: () =>
                                               Navigator.pop(context, 'Cancel'),
                                           child: const Text(
                                             'x',
                                             style: TextStyle(fontSize: 20),
                                           ),
-                                        ),
+                                        )*/
                                       ],
                                     ),
+                                    Positioned(top:height*0.32,left:width*0.12,child:GestureDetector(
+                                      child: Icon(Icons.cancel_outlined,size:32,color:Color(0xff35258A)),
+                                      onTap:() =>
+                                          Navigator.pop(context, 'Cancel') ,
+                                    ))
+                                    ])
                                   ),
                                 ),
                               ),

@@ -16,20 +16,31 @@ class MyQuestions extends StatefulWidget {
 class _MyQuestionsState extends State<MyQuestions> {
   var moneyd;
   @override
+  late Future<List<Map<String, Object>>> questions;
   void initState() {
     super.initState();
-    moneyd = loadMoney();
+    questions = loadQuestions();
   }
-  static Future<String> loadMoney() async {
+  static Future<List<Map<String, Object>>> loadQuestions() async {
   String? pid = AuthRepository.instance().user?.uid;
   var v =
-  (await FirebaseFirestore.instance.collection("avatars").doc(pid).get());
-  print('load');
-  var a = v['money'];
-  var s = a.toString();
-  print("ADADSDASD       " + a.toString());
+  (await FirebaseFirestore.instance.collection("questions").doc("questions").get());
+  var a = v['questions'];
+  List<Map<String, Object>> s=[];
+  for(int i=0;i<a.length;i++){
+    s.add( {
+      'questionText': a[i],
+      'answers': [
+        {'text': 'לעיתים קרובות', 'score': 2},
+        {'text': 'לפעמים', 'score': 1},
+        {'text': 'כמעט אף פעם', 'score': 0},
+      ],
+    });
+
+  }
   return s;
-  }  final _questions = const [
+  }
+  var _questions = const [
     {
       'questionText': 'כשאני מפחד, קשה לי לנשום',
       'answers': [
@@ -73,10 +84,19 @@ class _MyQuestionsState extends State<MyQuestions> {
       _totalScore = 0;
     });
   }
+  _saveAnswer(question,answer) async{
+    String? pid = AuthRepository.instance().user?.uid;
+    await FirebaseFirestore.instance.collection("questions").doc(pid).update({
+    question: answer,
+    });
+    print(question);
+    print(answer);
+  }
 
   void _answerQuestion(int score) {
     _totalScore += score * (pow(10, _questionIndex).toInt());
 
+    _saveAnswer(_questions[_questionIndex]['questionText'],(score==0)?'לעתים קרובות':(score==1)?'לפעמים':'אף פעם');
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
@@ -85,6 +105,7 @@ class _MyQuestionsState extends State<MyQuestions> {
       print('We have more questions!');
     } else {
       print('No more questions!');
+      print(_totalScore);
     }
   }
   @override
@@ -274,16 +295,35 @@ child:Container(
                 )),
         ),
         Positioned(bottom:20,left:20,child:Transform.rotate(angle: 180,child:Image.asset('images/skater.png'))),
-        Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: _questionIndex < _questions.length
-              ? Quiz(
+
+        FutureBuilder<List<Map<String, Object>>>(
+          future: questions,
+          builder: (BuildContext context,
+              AsyncSnapshot<List<Map<String, Object>>> snapshot) {
+            // ...
+            if (snapshot.connectionState ==
+                ConnectionState.done) {
+              _questions = snapshot.data ?? [];
+              return Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: _questionIndex < _questions.length
+                    ? Quiz(
                   answerQuestion: _answerQuestion,
                   questionIndex: _questionIndex,
                   questions: _questions,
                 ) //Quiz
-              : Result(_totalScore, _resetQuiz),
-        ),]) //Paddingk
+                    : Result(_totalScore, _resetQuiz),
+              );
+            }
+            return CircularProgressIndicator();
+          },
+        )
+
+
+
+
+
+        ,]) //Paddingk
       ), //Scaffold
       debugShowCheckedModeBanner: false,
     ); //MaterialApp

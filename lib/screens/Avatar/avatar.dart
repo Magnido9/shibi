@@ -65,12 +65,14 @@ class AvatarData {
 
 
     print('load');
+    print(v.data()!.keys.contains('purchased')?v['purchased']:"SSSSS");
     var a = AvatarData(
         money: v['money'],
         body: v['body'],
         glasses: v['glasses'],
         eye_color: Color(int.parse(v['eye_color'], radix: 16)),
         body_color: Color(int.parse(v['body_color'], radix: 16)),
+      acquired: v.data()!.keys.contains('purchased')?AvatarShop(v['purchased']): AvatarShop.empty(),
     );
     return a;
   }
@@ -130,7 +132,7 @@ class _AvatarPageState extends State<AvatarPage> {
       'body': widget.data.body,
       'glasses': widget.data.glasses,
       'body_color': widget.data.body_color.toString().split('(0x')[1].split(')')[0],
-      'purchased' : widget.data.acquired?.toString(),
+      'purchased' : widget.data.acquired.toString(),
       'money' : widget.data.money,
       'eye_color': widget.data.eye_color.toString().split('(0x')[1].split(')')[0],
     });
@@ -520,7 +522,8 @@ class _LoadAvatarState extends State<LoadAvatar> {
 
 class AvatarShop {
   AvatarShop(String s) : acquired_items=[] {
-    fromString(s);
+    print(s);
+    print(fromString(s));
   }
 
   List<List<List<bool>>> acquired_items;
@@ -611,8 +614,12 @@ class AvatarShop {
   }
 
   fromString(String s) {
-    var lists = json.decode(s);
 
+    print("list:");
+    print(s);
+    var lists = json.decode(s);
+    print("lists:");
+    print(lists);
     if (lists.length != merch.length) {
       acquired_items = AvatarShop
           .empty()

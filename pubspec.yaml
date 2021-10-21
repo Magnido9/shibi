@@ -55,11 +55,13 @@ dependencies:
   flutter_svg: ^0.22.0
   images_picker: ^1.0.0
   connectivity: ^3.0.2
-  location: ^4.1.1
+  location:
   google_maps_flutter: ^2.0.1
   tuple: 2.0.0
   permission_handler: ^6.1.0
-# Provides server & web apps with the ability to load, manipulate and save images with various image file formats PNG, JPEG, GIF, BMP, WebP, TIFF, TGA, PSD, PVR, and OpenEXR.
+  flutter_local_notifications: ^9.0.0
+
+  # Provides server & web apps with the ability to load, manipulate and save images with various image file formats PNG, JPEG, GIF, BMP, WebP, TIFF, TGA, PSD, PVR, and OpenEXR.
 
 # Allows painting & displaying Scalable Vector Graphics 1.1 files
   package_info: ^2.0.0
