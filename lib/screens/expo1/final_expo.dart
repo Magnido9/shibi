@@ -1480,7 +1480,9 @@ class _Page4State extends State<_Page4> {
           .doc(pid)
           .set({'money':money}, SetOptions(merge: true));
     }
-    return Scaffold(key: scaffoldKey,
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        key: scaffoldKey,
         drawer: Drawer(
           child: ListView(padding: EdgeInsets.zero, children: [
             DrawerHeader(
@@ -1608,51 +1610,7 @@ class _Page4State extends State<_Page4> {
               )),Positioned(bottom:0,
             child:Image.asset("images/Soldier3.png")
           ),
-          /*Stack(children: [
-                      Align(
-                      alignment: FractionalOffset.bottomRight,
-                      child: Container(
-                        child: FittedBox(
-                          child: Image.asset('images/shibi_pages/money.png'),
-                          fit: BoxFit.fitHeight,
-                        ),
-                      ),
-                    ), Positioned(
-                        bottom: 0.5*0.65* MediaQuery.of(context).size.height,
-                        left: 0,
-                        right:0,
-                        top:0,
-                        child:Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
-                      children:[  Text(
-                        "יאייייי!",
-                        textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.right,
-                        style: GoogleFonts.assistant(
-                          color: Colors.black,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w900,
-                        ),),Text(
-                        " זכית ב"+this.to_give.toString()+" מטבעות",
-                        textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.right,
-                        style: GoogleFonts.assistant(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                        ),),Text(
-                        "השתמשו בהם בחוכמה ;]",
-                        textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.right,
-                        style: GoogleFonts.assistant(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),)
 
-
-
-                ]))],)*/
           Align(
             alignment: Alignment.topRight,
             child: Container(

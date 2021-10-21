@@ -70,8 +70,10 @@ class StarsState extends State<Stars> {
         .collection("expos")
         .doc(AuthRepository.instance().user?.uid)
         .get());
-
-    return name['tasks'];
+    if(name.data()!.keys.contains('tasks'))
+      return name['tasks'];
+    else
+      return [];
   }
  int page=0;
   List<Color> colors=[Color(0xffEEDBEA),Color(0xffC7F5E1),Color(0xffA9E1F4),Color(0xffFBF6C6)];

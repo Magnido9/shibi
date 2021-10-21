@@ -1089,6 +1089,7 @@ class _HomeState extends State<Home> {
         MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
     var size = Size(x, 0.7 * x);
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
             centerTitle: true,
             title: Padding(
